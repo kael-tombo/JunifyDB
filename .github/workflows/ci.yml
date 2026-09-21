@@ -142,6 +142,15 @@ jobs:
           ./mvnw -B clean install -DskipTests
           (cd demo/demo-common && mvn -B install -DskipTests)  # runners preinstall mvn; no wrapper in demo-common
 
+      - name: Install starter modules (needed by framework demos)
+        # spring-boot-demo, quarkus-demo and micronaut-demo resolve junify starter
+        # artifacts that exist in no public repository — they must be installed
+        # locally before the demo loop. Mirrors the integrations job's module list.
+        run: |
+          for module in spring-boot-starter quarkus-extension micronaut-integration; do
+            (cd "$module" && mvn -B install -DskipTests) || exit 1
+          done
+
       - name: Run all demo test suites
         run: |
           failed=""
