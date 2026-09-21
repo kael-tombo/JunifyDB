@@ -140,18 +140,29 @@ jobs:
       - name: Install core and demo-common
         run: |
           ./mvnw -B clean install -DskipTests
-          (cd demo/demo-common && mvn -B install -DskipTests)
+          (cd demo/demo-common && ./mvnw -B install -DskipTests)
 
       - name: Run all demo test suites
         run: |
+          failed=""
           for d in spring-boot-demo quarkus-demo micronaut-demo vertx-demo \
                    end-to-end-validation advanced-queries-demo \
                    annotation-showcase-demo batch-processing-demo \
                    load-and-stress-demo; do
             echo "::group::Demo $d"
-            (cd "demo/$d" && mvn -B clean test) || exit 1
+            if (cd "demo/$d" && ./mvnw -B clean test); then
+              echo "::notice title=Demo $d::PASSED"
+            else
+              echo "::error title=Demo $d failed::mvn clean test exited non-zero; see the group above for the surefire failure summary"
+              failed="$failed $d"
+            fi
             echo "::endgroup::"
           done
+          # Surface every failing demo's surefire summary as a public annotation
+          for d in $failed; do
+            grep -h -A 6 "<<< FAILURE\!\|<<< ERROR\!" "demo/$d/target/surefire-reports"/*.txt 2>/dev/null | head -40 | sed "s/^/[$d] /" || true
+          done
+          [ -z "$failed" ] || { echo "Failing demos:$failed"; exit 1; }
 
   benchmark:
     needs: build

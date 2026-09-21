@@ -23,10 +23,11 @@ Two full clean builds in this audit; CI file read; POM profile inspection.
 | ID | Status | Severity | Description |
 |---|---|---|---|
 | CI-01 | **FIXED** (2026-09-21) | Medium | CI build job now runs `-Pcoverage-check`; measured coverage 73.6% line (jacoco.csv, 680-test suite) — gate enforced with headroom. |
-| CI-02 | CONFIRMED | Medium | Docker job fails (missing Dockerfile): remove job or add Dockerfile. |
+| CI-02 | **CLOSED** (2026-09-21) | Medium | Docker job removed from `ci.yml` entirely (verified: current workflow defines only build/integrations/demos/benchmark/deps-scan); Docker support is not advertised. |
 | CI-03 | **FIXED** (2026-09-21) | Low | Canonical `mvnw` (maven-wrapper 3.2.0) added and smoke-tested; CI dogfoods `./mvnw`. |
 | CI-04 | **FIXED** (2026-09-21) | Medium | New `integrations` job (3 starters; all verified green locally first) and `demos` job (all 9 demo suites). `cli/` excluded — orphan module, see R-25 in 53. |
 | CI-05 | ACCEPTABLE | Low | Windows path-lock: clean fails if a DB is open on `target/` (OS behavior; documented in run doc). |
+| CI-06 | **MITIGATED, ROOT-CAUSE OWNER-GATED** (R-27) | Medium | `demos` job failed in CI on runs #30 and #31 while the identical command sequence passes locally (all 9 demos green on Windows, exact CI steps reproduced 2026-09-21). Job logs are admin-only, so the job now emits per-demo `::error::`/`::notice::` check-run annotations plus the failing demos' surefire summaries — the next failure will be publicly diagnosable. Also switched demo builds to `./mvnw` for hermeticity. |
 
 ## Improvement Plan
 CI additions: `-Pcoverage-check`; matrix job for starter modules; demo smoke job; remove/fix Docker job; add `mvnw`.

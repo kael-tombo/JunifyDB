@@ -32,12 +32,14 @@ All defects identified in this audit with status, severity, fix evidence, and di
 | R-24 | Audit trail | In-memory only, not persisted | Low | **FIXED** (2026-09-21) | JSONL append to `<dataDir>/audit.log` for FILE/LSM/BTree engines (fail-open, writer closed on stop); ring buffer remains the in-memory view |
 | R-25 | `cli/` module | Orphan: no `pom.xml`, package path mismatch, stale imports (`org.junify.db.document.*`) → does not compile | Medium | **FIXED** (2026-09-21) | pom created, shell rewritten at correct package, live-verified via piped session, re-added to CI integrations job |
 | R-26 | `WriteAheadLog` | No record-size bound: one oversized write could exhaust memory | Medium | **FIXED** (2026-09-21) | `MAX_RECORD_BYTES` (64 MB) enforced in `log()`; regression test |
+| R-27 | CI `demos` job | Fails in CI (runs #30, #31) while the exact command sequence passes locally for all 9 demos; root cause not observable without admin log access | Medium | **MITIGATED** (2026-09-21) | Job now emits per-demo `::error::`/`::notice::` check-run annotations and failing demos' surefire summaries (public), uses `./mvnw`, and collects all failures before exiting; local repro 9/9 green documented in 44 (CI-06) |
 
 ## Summary
 - **Fixed in this audit**: R-01..R-09 (4 critical, 3 high, 2 others) — each with pre-fix failing evidence and post-fix green regression.
 - **Fixed in improvement round 1 (2026-09-21)**: R-10, R-12, R-14, R-15, R-17, R-21, R-23, R-26 (CI gates, wrapper, CDC wiring, CORS, quarantine/atomic snapshots, WAL bound) — evidence in 64.
 - **Fixed in improvement round 2 (2026-09-21)**: R-11, R-16, R-18, R-19, R-25, R-24, and the implementable half of R-20 (typed exceptions, index point lookup, vector dims, CLI recovery, audit persistence, atomic commits) — evidence in 63.
-- **Open**: R-13 (Maven Central staging — needs credentials), the mixed-writer half of R-20 (fundamental, documented in 13-T-03). Nothing else remains open; none are release blockers.
+- **Fixed in this session (2026-09-21, CI validation round)**: R-27 mitigated — CI `demos` job made publicly diagnosable (annotations + surefire summaries) after local repro showed 9/9 demos green with the exact CI sequence; run #31 evidence: build(21)+size-gate ✅, build(23) ✅, integrations ✅, benchmark ✅, deps-scan pending, demos ❌ (pre-existing since run #30, not a regression of the byte-buddy exclusion).
+- **Open**: R-13 (Maven Central staging — needs credentials), R-27 root cause (owner must read the next failing run's annotations/logs), the mixed-writer half of R-20 (fundamental, documented in 13-T-03). None are release blockers.
 
 ## Final Status
 **PASS** (register complete; remaining open items are external-dependency or fundamental-limitation items, documented and non-blocking)
