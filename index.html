@@ -1,17 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JunifyDB ΓÇö The Embedded Dual-Engine Database for Java</title>
-  <meta name="description" content="JunifyDB is the embedded multi-model database for Java. NoSQL + ANSI SQL in a single JAR. Zero Docker. Zero daemon. Zero infrastructure. Spring Boot, Quarkus, Micronaut ready." />
+  <title>JunifyDB — The Embedded Dual-Engine Database for Java</title>
+  <meta name="description" content="JunifyDB is the embedded multi-model database for Java. NoSQL + built-in SQL in a single JAR. Zero Docker. Zero daemon. Zero infrastructure. Spring Boot, Quarkus, Micronaut ready." />
   <meta name="keywords" content="JunifyDB, embedded database, Java, NoSQL, SQL, Spring Boot, Quarkus, Micronaut, JNoSQL, JPA, H2 alternative" />
-  <meta property="og:title" content="JunifyDB ΓÇö The Embedded Dual-Engine Database for Java" />
-  <meta property="og:description" content="NoSQL + ANSI SQL in a single JAR. Documents, Key-Value, Redis structures, Wide-Column ΓÇö zero Docker, zero daemon." />
+  <meta property="og:title" content="JunifyDB — The Embedded Dual-Engine Database for Java" />
+  <meta property="og:description" content="NoSQL + built-in SQL in a single JAR. Documents, Key-Value, Redis structures, Wide-Column — zero Docker, zero daemon." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://armand-ratombotiana.github.io/JunifyDB/" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="JunifyDB ΓÇö Embedded Dual-Engine Java Database" />
+  <meta name="twitter:title" content="JunifyDB — Embedded Dual-Engine Java Database" />
   <meta name="twitter:description" content="Blazing 85k+ ops/sec embedded NoSQL + SQL for JVM applications." />
 
   <!-- SVG Favicon with Volt Mascot Emblem -->
@@ -22,9 +22,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
-       DESIGN TOKENS ΓÇö ELECTRIC YELLOW / GOLD / WHITE THEME
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS — ELECTRIC YELLOW / GOLD / WHITE THEME
+    ═══════════════════════════════════════════════ */
     :root {
       --c-bg:           #08090d;
       --c-bg-card:      #0e1017;
@@ -70,9 +70,9 @@
       --shadow-btn:   0 8px 28px rgba(251, 191, 36, 0.35);
     }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        RESET & BASE
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
@@ -110,9 +110,9 @@
       50% { opacity: 1; }
     }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        NAVIGATION
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       background: rgba(8, 9, 13, 0.88);
@@ -196,9 +196,9 @@
       padding: 6px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
-       HERO SECTION ΓÇö DYNAMIC MASCOT & VALUE PROPOSITION
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    /* ═══════════════════════════════════════════════
+       HERO SECTION — DYNAMIC MASCOT & VALUE PROPOSITION
+    ═══════════════════════════════════════════════ */
     .hero {
       position: relative; z-index: 1;
       min-height: 94vh;
@@ -366,9 +366,9 @@
     .hero-stat-label { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
     .hero-stat-sep { width: 1px; background: var(--c-border); align-self: stretch; }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        HERO CODE PANEL
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     .hero-code-wrap {
       width: 100%; max-width: 920px; margin: 3.5rem auto 0;
       position: relative;
@@ -422,9 +422,9 @@
     .ann { color: #f59e0b; font-weight: 600; } /* Amber annotation */
     .cmt { color: #64748b; font-style: italic; }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        INTERACTIVE QUERY PLAYGROUND SECTION (NEW)
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     .playground-section {
       padding: 90px 2rem;
       position: relative; z-index: 1;
@@ -492,9 +492,9 @@
       color: #e2e8f0; overflow-y: auto; max-height: 220px; line-height: 1.6;
     }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        SECTION COMMON LAYOUT
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     section {
       padding: 100px 2rem;
       position: relative; z-index: 1;
@@ -524,9 +524,9 @@
       max-width: 680px; line-height: 1.7;
     }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        PHILOSOPHY PILLARS
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     .pillars-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -576,9 +576,9 @@
       color: var(--c-yellow-light);
     }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        POSITIONING QUADRANT
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     .positioning-wrap {
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 3rem; align-items: center; margin-top: 3.5rem;
@@ -620,9 +620,9 @@
       font-weight: 800;
     }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        TRI-STANDARD ANNOTATIONS
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     .annotation-strip {
       background: var(--c-bg-card);
       border: 1px solid var(--c-border);
@@ -645,9 +645,9 @@
     .ann-name { font-size: 14px; font-weight: 700; color: #ffffff; }
     .ann-pkg { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        STORAGE ENGINES
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     .engines-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1.5rem; margin-top: 3.5rem;
@@ -678,9 +678,9 @@
     .engine-use { font-size: 0.82rem; color: var(--text-muted); margin-top: 1rem; }
     .engine-use strong { color: var(--c-yellow); }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        FRAMEWORKS
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     .frameworks-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem; margin-top: 3.5rem;
@@ -709,9 +709,9 @@
     .fw-pkg  { font-size: 11.5px; color: var(--c-yellow); font-family: var(--font-mono); }
     .fw-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.2rem; }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        BENCHMARKS & PERFORMANCE
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     .benchmarks-wrap {
       background: var(--c-bg-card);
       border: 1px solid var(--c-border);
@@ -761,9 +761,9 @@
       transition: width 1s ease-out;
     }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        INSTALLATION TABS
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     .install-box {
       background: var(--c-bg-card);
       border: 1px solid var(--c-border);
@@ -786,9 +786,9 @@
     .tab-panel { display: none; padding: 1.75rem 2rem; }
     .tab-panel.active { display: block; }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        USE CASES
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     .use-cases-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 1.5rem; margin-top: 3.5rem;
@@ -814,9 +814,9 @@
       margin-top: 0.6rem; font-family: var(--font-mono);
     }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        CTA BAND WITH VOLT MASCOT
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     .cta-band {
       background: linear-gradient(180deg, var(--c-bg-card) 0%, #11141f 100%);
       border-top: 1px solid var(--c-border);
@@ -842,9 +842,9 @@
       font-size: 1.15rem; position: relative;
     }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        FOOTER
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     footer {
       background: #06070a;
       border-top: 1px solid var(--c-border);
@@ -866,9 +866,9 @@
     .footer-links a:hover { color: var(--c-yellow); }
     .footer-bottom { color: var(--text-muted); font-size: 12px; }
 
-    /* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
+    /* ═══════════════════════════════════════════════
        RESPONSIVE BREAKPOINTS
-    ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
+    ═══════════════════════════════════════════════ */
     @media (max-width: 900px) {
       .positioning-wrap { grid-template-columns: 1fr; }
       .playground-grid { grid-template-columns: 1fr; }
@@ -890,7 +890,7 @@
 <div class="bg-grid"></div>
 <div class="bg-radial-glow"></div>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ NAVIGATION ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ NAVIGATION ═══════════════════════════ -->
 <nav>
   <a href="#" class="nav-logo">
     <div class="nav-logo-icon">
@@ -900,7 +900,7 @@
       </svg>
     </div>
     <span class="nav-logo-text">Junify<span>DB</span></span>
-    <span class="nav-mascot-pill">ΓÜí Volt</span>
+    <span class="nav-mascot-pill">⚡ Volt</span>
   </a>
 
   <ul class="nav-links">
@@ -910,7 +910,7 @@
     <li><a href="#frameworks">Frameworks</a></li>
     <li><a href="#benchmarks">Performance</a></li>
     <li><a href="#install">Install</a></li>
-    <li><a href="https://github.com/armand-ratombotiana/JunifyDB" class="nav-cta" target="_blank" rel="noopener">GitHub Γåù</a></li>
+    <li><a href="https://github.com/armand-ratombotiana/JunifyDB" class="nav-cta" target="_blank" rel="noopener">GitHub ↗</a></li>
   </ul>
 
   <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
@@ -930,19 +930,19 @@
   <a href="#frameworks" onclick="toggleMobileMenu()">Frameworks</a>
   <a href="#benchmarks" onclick="toggleMobileMenu()">Performance</a>
   <a href="#install" onclick="toggleMobileMenu()">Installation</a>
-  <a href="https://github.com/armand-ratombotiana/JunifyDB" target="_blank" rel="noopener">Γÿà GitHub Repository Γåù</a>
+  <a href="https://github.com/armand-ratombotiana/JunifyDB" target="_blank" rel="noopener">★ GitHub Repository ↗</a>
 </div>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ HERO SECTION ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ HERO SECTION ═══════════════════════════ -->
 <section class="hero">
   <div class="hero-badge">
     <span class="hero-badge-dot"></span>
-    Java 17+ ┬╖ Spring Boot ┬╖ Quarkus ┬╖ Micronaut ┬╖ Vert.x
+    Java 17+ · Spring Boot · Quarkus · Micronaut · Vert.x
   </div>
 
   <!-- Volt Mascot Row -->
   <div class="hero-mascot-row">
-    <div class="mascot-avatar-wrap" title="Meet Volt ΓÇö The JunifyDB Mascot!">
+    <div class="mascot-avatar-wrap" title="Meet Volt — The JunifyDB Mascot!">
       <div class="mascot-aura"></div>
       <!-- Detailed Volt Cyber Cheetah Vector Mascot -->
       <svg class="mascot-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1018,9 +1018,9 @@
 
     <!-- Volt Mascot Dialogue Bubble -->
     <div class="mascot-speech-bubble">
-      <div class="mascot-name-tag">ΓÜí Volt says</div>
+      <div class="mascot-name-tag">⚡ Volt says</div>
       <div class="mascot-speech-text">
-        "Why wait <strong>8 seconds</strong> for Docker to spin up? I start in <strong>&lt;15ms</strong> directly inside your JVM!"
+        "Why wait <strong>8 seconds</strong> for Docker to spin up? I start in <strong>milliseconds</strong> directly inside your JVM!"
       </div>
     </div>
   </div>
@@ -1031,8 +1031,8 @@
   </h1>
 
   <p class="hero-sub">
-    NoSQL + ANSI SQL in a single JAR. Documents, Key-Value, Redis structures,
-    Wide-Column ΓÇö all in-process, zero infrastructure, zero Docker.
+    NoSQL + built-in SQL in a single JAR. Documents, Key-Value, Redis structures,
+    Wide-Column — all in-process, zero infrastructure, zero Docker.
   </p>
 
   <p class="hero-tagline">
@@ -1040,25 +1040,25 @@
   </p>
 
   <div class="hero-actions">
-    <a href="#install" class="btn-primary">ΓÜí Get Started</a>
-    <a href="https://github.com/armand-ratombotiana/JunifyDB" class="btn-secondary" target="_blank" rel="noopener">Γÿà View on GitHub</a>
-    <a href="#playground" class="btn-secondary">≡ƒº¬ Live Playground</a>
+    <a href="#install" class="btn-primary">⚡ Get Started</a>
+    <a href="https://github.com/armand-ratombotiana/JunifyDB" class="btn-secondary" target="_blank" rel="noopener">★ View on GitHub</a>
+    <a href="#playground" class="btn-secondary">🧪 Live Playground</a>
   </div>
 
   <div class="hero-stats">
     <div class="hero-stat">
-      <span class="hero-stat-value">&lt;15ms</span>
-      <span class="hero-stat-label">Cold Start Time</span>
+      <span class="hero-stat-value">ms-class</span>
+      <span class="hero-stat-label">Cold Start (indicative)</span>
     </div>
     <div class="hero-stat-sep"></div>
     <div class="hero-stat">
-      <span class="hero-stat-value">85,000+</span>
-      <span class="hero-stat-label">Writes / Sec</span>
+      <span class="hero-stat-value">18,000+</span>
+      <span class="hero-stat-label">Ops/Sec — stress demo (indicative)</span>
     </div>
     <div class="hero-stat-sep"></div>
     <div class="hero-stat">
-      <span class="hero-stat-value">120,000+</span>
-      <span class="hero-stat-label">Reads / Sec</span>
+      <span class="hero-stat-value">50</span>
+      <span class="hero-stat-label">Concurrent Threads — stress demo</span>
     </div>
     <div class="hero-stat-sep"></div>
     <div class="hero-stat">
@@ -1081,13 +1081,13 @@
           <span class="code-dot code-dot-y"></span>
           <span class="code-dot code-dot-g"></span>
         </div>
-        <span class="code-panel-title">Application.java ΓÇö Zero-Infrastructure Java</span>
+        <span class="code-panel-title">Application.java — Zero-Infrastructure Java</span>
         <button class="copy-btn" onclick="copyCode(this, 'heroCode')">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copy
         </button>
       </div>
-      <pre class="code-body" id="heroCode"><code><span class="cmt">// 1. Zero config ΓÇö starts in &lt;15ms inside your JVM</span>
+      <pre class="code-body" id="heroCode"><code><span class="cmt">// 1. Zero config — starts in milliseconds inside your JVM</span>
 <span class="cls">JunifyDB</span> db = <span class="cls">JunifyDB</span>.<span class="fn">inMemory</span>();
 
 <span class="cmt">// 2. Fluent NoSQL Document API</span>
@@ -1101,7 +1101,7 @@ db.<span class="fn">collection</span>(<span class="str">"users"</span>).<span cl
 db.<span class="fn">kv</span>().<span class="fn">list</span>(<span class="str">"events"</span>).<span class="fn">push</span>(<span class="str">"user_login"</span>);
 db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"active_tags"</span>).<span class="fn">add</span>(<span class="str">"embedded"</span>);
 
-<span class="cmt">// 4. Same data, instant ANSI SQL query!</span>
+<span class="cmt">// 4. Same data, instant built-in SQL query!</span>
 <span class="cls">SqlResultSet</span> rs = db.<span class="fn">sql</span>(<span class="str">"SELECT name, role FROM users WHERE role = 'ADMIN'"</span>);
 <span class="kw">while</span> (rs.<span class="fn">next</span>()) {
     <span class="cls">System</span>.out.<span class="fn">println</span>(rs.<span class="fn">getString</span>(<span class="str">"name"</span>));
@@ -1110,20 +1110,20 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
   </div>
 </section>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ PLAYGROUND SECTION (NEW) ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ PLAYGROUND SECTION (NEW) ═══════════════════════════ -->
 <section class="playground-section" id="playground">
   <div class="container">
     <div style="text-align: center;">
       <span class="section-label">Interactive Playground</span>
       <h2 class="section-title">Test Dual-Engine Queries <span class="text-gradient">In Real Time</span></h2>
-      <p class="section-desc" style="margin: 0 auto;">Experience how JunifyDB seamlessly bridges NoSQL document criteria and ANSI SQL against the same underlying in-process engine.</p>
+      <p class="section-desc" style="margin: 0 auto;">Experience how JunifyDB seamlessly bridges NoSQL document criteria and built-in SQL against the same underlying in-process engine.</p>
     </div>
 
     <div class="playground-box">
       <div class="playground-nav">
         <div class="playground-tabs">
-          <button class="pg-tab active" onclick="switchPlaygroundTab('nosql')">≡ƒôä NoSQL Document API</button>
-          <button class="pg-tab" onclick="switchPlaygroundTab('sql')">ΓÜí ANSI SQL Engine</button>
+          <button class="pg-tab active" onclick="switchPlaygroundTab('nosql')">📄 NoSQL Document API</button>
+          <button class="pg-tab" onclick="switchPlaygroundTab('sql')">⚡ built-in SQL Engine</button>
         </div>
         <button class="pg-run-btn" onclick="executePlaygroundQuery()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -1144,7 +1144,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
         <div class="pg-result-panel">
           <div class="pg-result-header">
             <span>JVM In-Memory Result</span>
-            <span class="pg-latency-badge" id="pgLatency">ΓÜí 0.08 ms</span>
+            <span class="pg-latency-badge" id="pgLatency">⚡ in-process</span>
           </div>
           <pre class="pg-output-json" id="pgOutput"><code>[
   {
@@ -1170,7 +1170,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
   </div>
 </section>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ PHILOSOPHY PILLARS ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ PHILOSOPHY PILLARS ═══════════════════════════ -->
 <section id="philosophy">
   <div class="container">
     <span class="section-label">Core Philosophy</span>
@@ -1179,7 +1179,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
 
     <div class="pillars-grid">
       <div class="pillar-card">
-        <div class="pillar-icon-box">ΓÜí</div>
+        <div class="pillar-icon-box">⚡</div>
         <div class="pillar-title">Embedded-First, Always</div>
         <div class="pillar-desc">
           Starts in a single method call and lives completely within your JVM process. No ports, no sockets, no child processes. The lifecycle of the database is the lifecycle of your application.
@@ -1188,7 +1188,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
       </div>
 
       <div class="pillar-card">
-        <div class="pillar-icon-box">ΓÜÖ∩╕Å</div>
+        <div class="pillar-icon-box">⚙️</div>
         <div class="pillar-title">Zero Configuration</div>
         <div class="pillar-desc">
           Fully operational with zero config files, zero environment variables, and zero JVM flags. Every option has a production-safe default. Add durability with one extra method call.
@@ -1197,16 +1197,16 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
       </div>
 
       <div class="pillar-card">
-        <div class="pillar-icon-box">≡ƒöÇ</div>
+        <div class="pillar-icon-box">🔀</div>
         <div class="pillar-title">Dual-Engine: NoSQL + SQL</div>
         <div class="pillar-desc">
-          Access your documents via fluent NoSQL queries or standard ANSI SQL simultaneously. Both paradigms run against the exact same underlying storage substrate.
+          Access your documents via fluent NoSQL queries or standard built-in SQL simultaneously. Both paradigms run against the exact same underlying storage substrate.
         </div>
         <div class="pillar-code">db.sql("SELECT * FROM orders")</div>
       </div>
 
       <div class="pillar-card">
-        <div class="pillar-icon-box">≡ƒÅ╖∩╕Å</div>
+        <div class="pillar-icon-box">🏷️</div>
         <div class="pillar-title">Tri-Standard Annotations</div>
         <div class="pillar-desc">
           JunifyDB transparently reflects Jakarta Persistence (@Entity), Eclipse JNoSQL (@Entity), and Hibernate annotations without adding unwanted compile-time JARs to your classpath.
@@ -1215,16 +1215,16 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
       </div>
 
       <div class="pillar-card">
-        <div class="pillar-icon-box">≡ƒôè</div>
+        <div class="pillar-icon-box">📊</div>
         <div class="pillar-title">Observable by Design</div>
         <div class="pillar-desc">
-          Every mutation emits a lifecycle event. Built-in atomic metrics counters, Change Data Capture (CDC), and tamper-evident audit logs are active out of the box.
+          Every mutation emits a lifecycle event. Built-in atomic metrics counters, Change Data Capture (CDC), and a bounded audit trail (in-memory view with a durable JSONL copy) are active out of the box.
         </div>
         <div class="pillar-code">db.events().subscribe(EventType.INSERT)</div>
       </div>
 
       <div class="pillar-card">
-        <div class="pillar-icon-box">≡ƒº⌐</div>
+        <div class="pillar-icon-box">🧩</div>
         <div class="pillar-title">Pluggable Storage SPI</div>
         <div class="pillar-desc">
           Decoupled query and collection layers. Seamlessly toggle between Heap RAM, persistent B-Tree, or high-throughput LSM-Tree with zero application code changes.
@@ -1235,7 +1235,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
   </div>
 </section>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ POSITIONING QUADRANT ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ POSITIONING QUADRANT ═══════════════════════════ -->
 <section style="background: rgba(14, 16, 23, 0.4); border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border);">
   <div class="container">
     <div class="positioning-wrap">
@@ -1252,28 +1252,28 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
 
       <div class="quadrant-grid">
         <div class="quad-cell">
-          <div class="quad-cell-label">Embedded ┬╖ Relational</div>
+          <div class="quad-cell-label">Embedded · Relational</div>
           <div class="quad-cell-name">H2 / SQLite / Derby</div>
           <div class="quad-cell-desc">Great for SQL relational tests, but rigid schema migrations and no native JSON/KV.</div>
           <span class="quad-badge dim">Relational Only</span>
         </div>
 
         <div class="quad-cell highlight">
-          <div class="quad-cell-label">ΓÜí Embedded ┬╖ Multi-Model</div>
+          <div class="quad-cell-label">⚡ Embedded · Multi-Model</div>
           <div class="quad-cell-name">JunifyDB</div>
-          <div class="quad-cell-desc">Documents, Key-Value, Redis structures, Wide-Column, HNSW Vectors + ANSI SQL.</div>
+          <div class="quad-cell-desc">Documents, Key-Value, Redis structures, Wide-Column, HNSW Vectors + built-in SQL.</div>
           <span class="quad-badge gold">The Golden Standard</span>
         </div>
 
         <div class="quad-cell">
-          <div class="quad-cell-label">Client/Server ┬╖ Relational</div>
+          <div class="quad-cell-label">Client/Server · Relational</div>
           <div class="quad-cell-name">PostgreSQL / MySQL</div>
           <div class="quad-cell-desc">Full enterprise RDBMS, requires Docker or cloud servers.</div>
           <span class="quad-badge dim">Daemon Required</span>
         </div>
 
         <div class="quad-cell">
-          <div class="quad-cell-label">Client/Server ┬╖ NoSQL</div>
+          <div class="quad-cell-label">Client/Server · NoSQL</div>
           <div class="quad-cell-name">MongoDB / Redis / Cassandra</div>
           <div class="quad-cell-desc">Fast, but requires Testcontainers, open ports, and memory overhead in CI.</div>
           <span class="quad-badge dim">Docker Required</span>
@@ -1283,7 +1283,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
   </div>
 </section>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ TRI-STANDARD ANNOTATIONS ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ TRI-STANDARD ANNOTATIONS ═══════════════════════════ -->
 <section>
   <div class="container">
     <span class="section-label">Interoperability</span>
@@ -1292,7 +1292,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
 
     <div class="annotation-strip">
       <div style="font-size: 1.15rem; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem;">
-        Drop in your existing entities ΓÇö JunifyDB inspects them dynamically
+        Drop in your existing entities — JunifyDB inspects them dynamically
       </div>
       <p style="color: var(--text-secondary); font-size: 0.95rem;">
         Whether your model is annotated with Eclipse JNoSQL, Jakarta JPA, or legacy Hibernate, JunifyDB resolves ID generators, column mappings, and transient fields seamlessly.
@@ -1327,7 +1327,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
   </div>
 </section>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ STORAGE ENGINES ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ STORAGE ENGINES ═══════════════════════════ -->
 <section id="engines" style="background: rgba(14, 16, 23, 0.4); border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border);">
   <div class="container">
     <span class="section-label">Pluggable Core</span>
@@ -1366,7 +1366,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
   </div>
 </section>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ FRAMEWORKS ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ FRAMEWORKS ═══════════════════════════ -->
 <section id="frameworks">
   <div class="container">
     <span class="section-label">Native Starters</span>
@@ -1376,7 +1376,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
     <div class="frameworks-grid">
       <div class="fw-card">
         <div class="fw-header">
-          <div class="fw-icon">≡ƒìâ</div>
+          <div class="fw-icon">🍃</div>
           <div>
             <div class="fw-name">Spring Boot</div>
             <div class="fw-pkg">junify-db-spring-boot-starter</div>
@@ -1388,7 +1388,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
 
       <div class="fw-card">
         <div class="fw-header">
-          <div class="fw-icon">ΓÜí</div>
+          <div class="fw-icon">⚡</div>
           <div>
             <div class="fw-name">Quarkus</div>
             <div class="fw-pkg">junify-db-quarkus-extension</div>
@@ -1400,7 +1400,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
 
       <div class="fw-card">
         <div class="fw-header">
-          <div class="fw-icon">≡ƒÜÇ</div>
+          <div class="fw-icon">🚀</div>
           <div>
             <div class="fw-name">Micronaut</div>
             <div class="fw-pkg">junify-db-micronaut-integration</div>
@@ -1413,35 +1413,35 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
   </div>
 </section>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ BENCHMARKS ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ BENCHMARKS ═══════════════════════════ -->
 <section id="benchmarks" style="background: rgba(14, 16, 23, 0.4); border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border);">
   <div class="container">
     <span class="section-label">Empirical Benchmarks</span>
-    <h2 class="section-title">Verified In-Process <span class="text-gradient">Throughput</span></h2>
-    <p class="section-desc">Measured on Apple M-series / AMD Ryzen hardware under realistic concurrency benchmarks.</p>
+    <h2 class="section-title">Indicative In-Process <span class="text-gradient">Throughput</span></h2>
+    <p class="section-desc">Indicative figures from the in-repo benchmark and stress harnesses — re-run them yourself (mvn -Pbenchmark, demo/load-and-stress) on your hardware.</p>
 
     <div class="benchmarks-wrap">
       <div class="bm-grid">
         <div class="bm-card">
-          <div class="bm-number">124,000<span class="bm-unit">ops/s</span></div>
+          <div class="bm-number">10,000+<span class="bm-unit">ops/s</span></div>
           <div class="bm-label">Key-Value Point Reads</div>
-          <div class="bm-context">In-Memory Engine, 32 threads</div>
+          <div class="bm-context">In-Memory Engine, multi-threaded — indicative</div>
         </div>
 
         <div class="bm-card">
-          <div class="bm-number">86,500<span class="bm-unit">ops/s</span></div>
+          <div class="bm-number">10,000+<span class="bm-unit">ops/s</span></div>
           <div class="bm-label">Document Inserts</div>
-          <div class="bm-context">In-Memory with secondary index</div>
+          <div class="bm-context">Document inserts, indexed — indicative</div>
         </div>
 
         <div class="bm-card">
-          <div class="bm-number">48,200<span class="bm-unit">ops/s</span></div>
+          <div class="bm-number">15,000+<span class="bm-unit">ops/s</span></div>
           <div class="bm-label">Persistent Writes</div>
-          <div class="bm-context">WAL + Background checkpoint</div>
+          <div class="bm-context">FILE engine, WAL fsync — indicative</div>
         </div>
 
         <div class="bm-card">
-          <div class="bm-number">11<span class="bm-unit">ms</span></div>
+          <div class="bm-number">ms<span class="bm-unit">-class</span></div>
           <div class="bm-label">Cold Boot Latency</div>
           <div class="bm-context">From new JVM to operational</div>
         </div>
@@ -1470,7 +1470,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
   </div>
 </section>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ INSTALLATION ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ INSTALLATION ═══════════════════════════ -->
 <section id="install">
   <div class="container">
     <div style="text-align: center;">
@@ -1493,8 +1493,8 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
           <button class="copy-btn" onclick="copyCode(this, 'mavenCode')">Copy XML</button>
         </div>
         <pre class="code-body" id="mavenCode"><code>&lt;<span class="kw">dependency</span>&gt;
-    &lt;<span class="kw">groupId</span>&gt;org.junify&lt;/<span class="kw">groupId</span>&gt;
-    &lt;<span class="kw">artifactId</span>&gt;junify-db&lt;/<span class="kw">artifactId</span>&gt;
+    &lt;<span class="kw">groupId</span>&gt;org.junify.db&lt;/<span class="kw">groupId</span>&gt;
+    &lt;<span class="kw">artifactId</span>&gt;junify-db-core&lt;/<span class="kw">artifactId</span>&gt;
     &lt;<span class="kw">version</span>&gt;1.0.0&lt;/<span class="kw">version</span>&gt;
 &lt;/<span class="kw">dependency</span>&gt;</code></pre>
       </div>
@@ -1503,7 +1503,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
         <div style="display:flex; justify-content:flex-end; margin-bottom: 8px;">
           <button class="copy-btn" onclick="copyCode(this, 'gradleCode')">Copy Gradle</button>
         </div>
-        <pre class="code-body" id="gradleCode"><code>implementation(<span class="str">'org.junify:junify-db:1.0.0'</span>)</code></pre>
+        <pre class="code-body" id="gradleCode"><code>implementation(<span class="str">'org.junify.db:junify-db-core:1.0.0'</span>)</code></pre>
       </div>
 
       <div class="tab-panel" id="tab-spring">
@@ -1511,7 +1511,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
           <button class="copy-btn" onclick="copyCode(this, 'springCode')">Copy Spring</button>
         </div>
         <pre class="code-body" id="springCode"><code>&lt;<span class="kw">dependency</span>&gt;
-    &lt;<span class="kw">groupId</span>&gt;org.junify&lt;/<span class="kw">groupId</span>&gt;
+    &lt;<span class="kw">groupId</span>&gt;org.junify.db&lt;/<span class="kw">groupId</span>&gt;
     &lt;<span class="kw">artifactId</span>&gt;junify-db-spring-boot-starter&lt;/<span class="kw">artifactId</span>&gt;
     &lt;<span class="kw">version</span>&gt;1.0.0&lt;/<span class="kw">version</span>&gt;
 &lt;/<span class="kw">dependency</span>&gt;</code></pre>
@@ -1522,7 +1522,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
           <button class="copy-btn" onclick="copyCode(this, 'quarkusCode')">Copy Quarkus</button>
         </div>
         <pre class="code-body" id="quarkusCode"><code>&lt;<span class="kw">dependency</span>&gt;
-    &lt;<span class="kw">groupId</span>&gt;org.junify&lt;/<span class="kw">groupId</span>&gt;
+    &lt;<span class="kw">groupId</span>&gt;org.junify.db&lt;/<span class="kw">groupId</span>&gt;
     &lt;<span class="kw">artifactId</span>&gt;junify-db-quarkus-extension&lt;/<span class="kw">artifactId</span>&gt;
     &lt;<span class="kw">version</span>&gt;1.0.0&lt;/<span class="kw">version</span>&gt;
 &lt;/<span class="kw">dependency</span>&gt;</code></pre>
@@ -1533,7 +1533,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
           <button class="copy-btn" onclick="copyCode(this, 'micronautCode')">Copy Micronaut</button>
         </div>
         <pre class="code-body" id="micronautCode"><code>&lt;<span class="kw">dependency</span>&gt;
-    &lt;<span class="kw">groupId</span>&gt;org.junify&lt;/<span class="kw">groupId</span>&gt;
+    &lt;<span class="kw">groupId</span>&gt;org.junify.db&lt;/<span class="kw">groupId</span>&gt;
     &lt;<span class="kw">artifactId</span>&gt;junify-db-micronaut-integration&lt;/<span class="kw">artifactId</span>&gt;
     &lt;<span class="kw">version</span>&gt;1.0.0&lt;/<span class="kw">version</span>&gt;
 &lt;/<span class="kw">dependency</span>&gt;</code></pre>
@@ -1542,7 +1542,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
   </div>
 </section>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ USE CASES ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ USE CASES ═══════════════════════════ -->
 <section style="background: rgba(14, 16, 23, 0.4); border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border);">
   <div class="container">
     <span class="section-label">Architectural Fit</span>
@@ -1551,63 +1551,63 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
 
     <div class="use-cases-grid">
       <div class="uc-card">
-        <div class="uc-icon">≡ƒº¬</div>
+        <div class="uc-icon">🧪</div>
         <div>
           <div class="uc-title">Integration Testing Without Docker</div>
-          <div class="uc-desc">Replace Testcontainers in your CI pipeline. No Docker daemon, no image registry download, no port binding conflicts. Starts in under 15ms.</div>
-          <div class="uc-highlight">ΓÜí 15ms vs 5+ seconds for containers</div>
+          <div class="uc-desc">Replace Testcontainers in your CI pipeline. No Docker daemon, no image registry download, no port binding conflicts. Starts in milliseconds.</div>
+          <div class="uc-highlight">⚡ milliseconds vs 5+ seconds for containers</div>
         </div>
       </div>
 
       <div class="uc-card">
-        <div class="uc-icon">≡ƒôí</div>
+        <div class="uc-icon">📡</div>
         <div>
           <div class="uc-title">Edge & Desktop JVM Apps</div>
           <div class="uc-desc">JavaFX apps, POS systems, IoT gateways. Single JAR, zero native C-libraries, crash-safe WAL, pure Java portability across x86 and ARM.</div>
-          <div class="uc-highlight">ΓÜí Single JAR, 0 native dependencies</div>
+          <div class="uc-highlight">⚡ Single JAR, 0 native dependencies</div>
         </div>
       </div>
 
       <div class="uc-card">
-        <div class="uc-icon">ΓÜí</div>
+        <div class="uc-icon">⚡</div>
         <div>
           <div class="uc-title">In-Process Cache & Session Store</div>
           <div class="uc-desc">Sub-microsecond local key-value lookups without Redis network latency. Built-in TTL expiration, Redis-style lists, sets, and hashes.</div>
-          <div class="uc-highlight">ΓÜí Zero network hop, zero sidecar</div>
+          <div class="uc-highlight">⚡ Zero network hop, zero sidecar</div>
         </div>
       </div>
 
       <div class="uc-card">
-        <div class="uc-icon">≡ƒÜÇ</div>
+        <div class="uc-icon">🚀</div>
         <div>
           <div class="uc-title">Rapid Prototyping</div>
           <div class="uc-desc">Add the dependency, invoke one factory method, and immediately write business logic. No database servers to configure across teammates.</div>
-          <div class="uc-highlight">ΓÜí One Maven dependency, zero setup</div>
+          <div class="uc-highlight">⚡ One Maven dependency, zero setup</div>
         </div>
       </div>
 
       <div class="uc-card">
-        <div class="uc-icon">≡ƒöä</div>
+        <div class="uc-icon">🔄</div>
         <div>
           <div class="uc-title">Microservice State Without Sidecars</div>
-          <div class="uc-desc">Rate limiters, feature flags, task queues, event journals ΓÇö directly inside your application boundary. Eliminates extra Kubernetes pod costs.</div>
-          <div class="uc-highlight">ΓÜí Eliminates the sidecar cost entirely</div>
+          <div class="uc-desc">Rate limiters, feature flags, task queues, event journals — directly inside your application boundary. Eliminates extra Kubernetes pod costs.</div>
+          <div class="uc-highlight">⚡ Eliminates the sidecar cost entirely</div>
         </div>
       </div>
 
       <div class="uc-card">
-        <div class="uc-icon">≡ƒöì</div>
+        <div class="uc-icon">🔍</div>
         <div>
           <div class="uc-title">In-Process Vector & Full-Text Search</div>
           <div class="uc-desc">Built-in HNSW index for high-dimensional semantic embeddings alongside BM25 full-text indexing with zero external search clusters.</div>
-          <div class="uc-highlight">ΓÜí Native HNSW vector search in JVM</div>
+          <div class="uc-highlight">⚡ Native HNSW vector search in JVM</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ CTA BAND ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ CTA BAND ═══════════════════════════ -->
 <div class="cta-band">
   <div class="cta-band-mascot">
     <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1618,12 +1618,12 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
   <h2>Write Code. <span class="text-gradient">Not Infrastructure.</span></h2>
   <p>JunifyDB embeds everything. You focus purely on your domain logic.</p>
   <div style="display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap; position: relative; z-index: 1;">
-    <a href="https://github.com/armand-ratombotiana/JunifyDB" class="btn-primary" target="_blank" rel="noopener">Γ¡É Star on GitHub</a>
-    <a href="#install" class="btn-secondary">ΓÜí Quick Start</a>
+    <a href="https://github.com/armand-ratombotiana/JunifyDB" class="btn-primary" target="_blank" rel="noopener">⭐ Star on GitHub</a>
+    <a href="#install" class="btn-secondary">⚡ Quick Start</a>
   </div>
 </div>
 
-<!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ FOOTER ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
 <footer>
   <div class="footer-logo">
     <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1632,7 +1632,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
     </svg>
     Junify<span>DB</span>
   </div>
-  <div class="footer-tagline">The embedded dual-engine database for Java ΓÇö NoSQL + ANSI SQL, zero infrastructure.</div>
+  <div class="footer-tagline">The embedded dual-engine database for Java — NoSQL + built-in SQL, zero infrastructure.</div>
   <div class="footer-links">
     <a href="https://github.com/armand-ratombotiana/JunifyDB" target="_blank" rel="noopener">GitHub</a>
     <a href="https://github.com/armand-ratombotiana/JunifyDB/blob/main/README.md" target="_blank" rel="noopener">Documentation</a>
@@ -1640,11 +1640,11 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
     <a href="https://github.com/armand-ratombotiana/JunifyDB/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
     <a href="https://github.com/armand-ratombotiana/JunifyDB/blob/main/LICENSE" target="_blank" rel="noopener">Apache 2.0</a>
   </div>
-  <div class="footer-bottom">┬⌐ 2026 JunifyDB Contributors ┬╖ Released under the Apache License 2.0</div>
+  <div class="footer-bottom">© 2026 JunifyDB Contributors · Released under the Apache License 2.0</div>
 </footer>
 
 <script>
-  /* ΓöÇΓöÇ Tab switching for Install Section ΓöÇΓöÇ */
+  /* ── Tab switching for Install Section ── */
   function switchInstallTab(e, tabId) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -1652,14 +1652,14 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
     document.getElementById(tabId).classList.add('active');
   }
 
-  /* ΓöÇΓöÇ Copy Code to Clipboard ΓöÇΓöÇ */
+  /* ── Copy Code to Clipboard ── */
   function copyCode(btn, codeId) {
     const el = document.getElementById(codeId);
     if (!el) return;
     navigator.clipboard.writeText(el.innerText).then(() => {
       const orig = btn.innerHTML;
       btn.classList.add('copied');
-      btn.innerHTML = 'Γ£ô Copied!';
+      btn.innerHTML = '✓ Copied!';
       setTimeout(() => {
         btn.classList.remove('copied');
         btn.innerHTML = orig;
@@ -1667,13 +1667,13 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
     }).catch(err => console.error('Copy failed', err));
   }
 
-  /* ΓöÇΓöÇ Mobile Hamburger Drawer Toggle ΓöÇΓöÇ */
+  /* ── Mobile Hamburger Drawer Toggle ── */
   function toggleMobileMenu() {
     const drawer = document.getElementById('mobileDrawer');
     if (drawer) drawer.classList.toggle('open');
   }
 
-  /* ΓöÇΓöÇ Query Playground Controller ΓöÇΓöÇ */
+  /* ── Query Playground Controller ── */
   let currentPgTab = 'nosql';
   function switchPlaygroundTab(tab) {
     currentPgTab = tab;
@@ -1713,7 +1713,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
 ]</code>`;
     } else {
       editor.innerHTML = `
-        <div style="color: #64748b; margin-bottom: 8px;">-- ANSI SQL Engine execution in same JVM</div>
+        <div style="color: #64748b; margin-bottom: 8px;">-- built-in SQL Engine execution in same JVM</div>
         <div style="color: #fbbf24;">SELECT</div>
         <div style="padding-left: 20px; color: #ffffff;">customer,</div>
         <div style="padding-left: 20px; color: #ffffff;">COUNT(*) <span style="color: #fbbf24;">AS</span> order_count,</div>
@@ -1747,7 +1747,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
     lat.style.color = '#fbbf24';
     setTimeout(() => {
       const ms = (0.05 + Math.random() * 0.08).toFixed(2);
-      lat.innerHTML = `ΓÜí ${ms} ms`;
+      lat.innerHTML = `⚡ ${ms} ms`;
       lat.style.color = '#34d399';
     }, 180);
   }
