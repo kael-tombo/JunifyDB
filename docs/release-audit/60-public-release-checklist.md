@@ -30,7 +30,7 @@ Objective, checkboxed verification for the public GitHub release of 1.0.0.
 ### Release Mechanics
 - [x] Repo litter removed ($null/server.*)
 - [x] `mvnw` shell script (P1-3) — done 2026-09-21, round 1 (smoke-tested; CI dogfoods it)
-- [ ] GitHub Release draft: tag `v1.0.0`, attach shaded jar, link audit docs
+- [x] GitHub Release draft: tag `v1.0.0`, attach core jar (2.89 MB, size-gated), link audit docs (created 2026-09-21 after run #34 full green; jar is `junify-db-core-1.0.0.jar` — the shade step replaces the plain jar in place)
 - [x] Recommended version: **1.0.0** (47-VER-02)
 - [ ] Maven Central: blocked until 46 items (P2-1) — GitHub-first release is valid without it
 
