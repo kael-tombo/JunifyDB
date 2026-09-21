@@ -149,7 +149,9 @@ public class Transaction implements AutoCloseable {
         boolean mvccOk = true;
         if (mvcc != null) {
             long commitTs = mvcc.assignTimestamp();
-            mvccOk = mvcc.commit(id, commitTs);
+            // Pass the snapshot (read) timestamp so write-write conflicts against
+            // data committed after this transaction started are detected.
+            mvccOk = mvcc.commit(id, commitTs, readTimestamp);
         }
 
         if (mvccOk) {

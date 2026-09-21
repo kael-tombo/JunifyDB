@@ -38,5 +38,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed Windows file-locking defect in `WriteAheadLog` by ensuring `logFileOutputStream` closes cleanly on database shutdown.
+- **Release-audit fixes (September 2026):**
+  - MVCC write-write conflict detection was unreachable; commits now validate the write set against the transaction's snapshot timestamp (first-writer-wins). `MVCCManager.commit(txId, commitTs, readTimestamp)` added; the 2-arg overload is retained.
+  - `FileEngine` now replays its write-ahead log on startup (entries newer than the last checkpoint), so writes not yet flushed to JSON snapshots are no longer lost on an unclean shutdown.
+  - `LSMTreeEngine` now replays its WAL even when SSTables exist, adds recovered keys to the bloom filter, and initializes its WAL writer after recovery; compaction and SSTable ordering are consistently oldest-to-newest with newest-first reads.
+  - Collections persisted by a previous run are re-exposed after restart via the new `StorageEngine.collectionNames()` SPI (`JunifyDB.getCollectionNames()` now reflects on-disk state for the FILE engine).
 - Resolved LSM-Tree bloom filter cold-restart bug by populating filter directly from loaded SSTables.
 - Fixed B-Tree engine shutdown check-open order to guarantee dirty keys flush before marking engine closed.

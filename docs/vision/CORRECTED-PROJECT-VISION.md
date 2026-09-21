@@ -3,6 +3,14 @@
 **Audit Verdict**: Scope Realignment  
 **Date**: September 9, 2026  
 
+> **Status update (September 2026, release audit):** This document's "no SQL
+> parser" positioning is **superseded**. The project ships a working built-in
+> SQL engine (`org.junify.db.sql`) supporting SELECT/INSERT/UPDATE/DELETE,
+> JOIN, GROUP BY and filtering over the same collections — an
+> implementation-defined dialect, not a full ANSI:92 grammar. The SQL engine
+> is a documented, tested part of the product; see the README and
+> docs/release-audit/08-sql-language-and-query-api.md.
+
 ---
 
 ## 1. Problem Statement & Reality Check

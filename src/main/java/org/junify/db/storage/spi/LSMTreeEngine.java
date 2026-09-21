@@ -63,9 +63,9 @@ public class LSMTreeEngine implements StorageEngine {
         try {
             Files.createDirectories(sstDir);
             Files.createDirectories(walDir);
-            this.wal = new WriteAheadLog(dataDir);
             loadSSTables();
             recoverFromWal();
+            this.wal = new WriteAheadLog(dataDir);
         } catch (IOException e) {
             throw new RuntimeException("Failed to initialize LSM-Tree", e);
         }
@@ -134,8 +134,11 @@ public class LSMTreeEngine implements StorageEngine {
             memtableLock.readLock().unlock();
         }
         
-        for (SSTable sstable : sstables) {
-            String value = sstable.get(compositeKey);
+        // SSTables are ordered oldest -> newest; search newest first so the
+        // most recent flushed value wins (mirrors LSM read semantics).
+        var snapshot = new ArrayList<>(sstables);
+        for (int i = snapshot.size() - 1; i >= 0; i--) {
+            String value = snapshot.get(i).get(compositeKey);
             if (value != null) {
                 if (isTombstone(value)) return null;
                 return value;
@@ -195,9 +198,18 @@ public class LSMTreeEngine implements StorageEngine {
             memtableLock.readLock().unlock();
         }
         
-        for (SSTable sstable : sstables) {
-            results.addAll(sstable.scan(prefix));
+        // Newest-wins across SSTables: iterate newest -> oldest and keep the
+        // first value seen for each composite key.
+        var tableSnapshot = new ArrayList<>(sstables);
+        var newestFirst = new java.util.LinkedHashMap<String, String>();
+        for (int i = tableSnapshot.size() - 1; i >= 0; i--) {
+            for (var e : tableSnapshot.get(i).data.entrySet()) {
+                if (e.getKey().startsWith(prefix) && !isTombstone(e.getValue())) {
+                    newestFirst.putIfAbsent(e.getKey(), e.getValue());
+                }
+            }
         }
+        results.addAll(newestFirst.values());
         
         return results;
     }
@@ -224,8 +236,12 @@ public class LSMTreeEngine implements StorageEngine {
             memtableLock.readLock().unlock();
         }
         
+        // SSTable.keys(prefix) returns raw composite keys ("collection:key");
+        // extract the logical key so the union with memtable keys matches.
         for (SSTable sstable : sstables) {
-            keys.addAll(sstable.keys(prefix));
+            for (String composite : sstable.keys(prefix)) {
+                keys.add(extractKey(composite));
+            }
         }
         
         return keys;
@@ -320,7 +336,7 @@ public class LSMTreeEngine implements StorageEngine {
             
             SSTable sstable = SSTable.write(sstPath, toWrite);
             synchronized (sstables) {
-                sstables.add(0, sstable);
+                sstables.add(sstable);
             }
             
             dirty.set(false);
@@ -339,6 +355,9 @@ public class LSMTreeEngine implements StorageEngine {
                 List<SSTable> toMerge = new ArrayList<>(sstables.subList(0, Math.min(3, sstables.size())));
                 
                 Map<String, String> merged = new LinkedHashMap<>();
+                // Newest-wins: apply oldest table first so newer values overwrite
+                // older ones, matching the pre-compaction read-order semantics
+                // (readers scan sstables oldest -> newest via get() first-match).
                 for (SSTable sstable : toMerge) {
                     merged.putAll(sstable.getAll());
                 }
@@ -381,10 +400,6 @@ public class LSMTreeEngine implements StorageEngine {
         Path walFile = walDir.resolve("wal.log");
         if (!Files.exists(walFile)) return;
         
-        if (!sstables.isEmpty()) {
-            return;
-        }
-        
         try (var lines = Files.lines(walFile)) {
             lines.forEach(line -> {
                 try {
@@ -399,8 +414,10 @@ public class LSMTreeEngine implements StorageEngine {
                     
                     if ("PUT".equals(type)) {
                         memtable.put(compositeKey, value);
+                        bloomFilter.add(compositeKey);
                     } else if ("DELETE".equals(type)) {
                         memtable.put(compositeKey, createTombstone());
+                        bloomFilter.add(compositeKey);
                     }
                 } catch (Exception e) {
                     System.err.println("WAL recovery error: " + e.getMessage());

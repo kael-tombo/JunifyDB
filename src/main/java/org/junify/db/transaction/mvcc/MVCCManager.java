@@ -101,28 +101,50 @@ public final class MVCCManager {
      * Returns {@code false} if a write-write conflict is detected, in which
      * case the caller must roll back.
      */
+    /**
+     * Convenience overload equivalent to {@code commit(txId, commitTs, commitTs)}.
+     * Kept for backward compatibility with existing callers.
+     */
     public boolean commit(String txId, long commitTs) {
+        return commit(txId, commitTs, commitTs);
+    }
+
+    /**
+     * Commit a transaction's staged writes.
+     *
+     * @param txId          transaction identifier whose staged writes are applied
+     * @param commitTs      timestamp assigned to this commit (from {@link #assignTimestamp()})
+     * @param readTimestamp the snapshot timestamp at which the transaction started
+     * @return {@code false} if a write-write conflict is detected (a key in the
+     *         write set was committed by another transaction after
+     *         {@code readTimestamp}), in which case nothing is applied and the
+     *         caller must roll back
+     */
+    public boolean commit(String txId, long commitTs, long readTimestamp) {
         var buffer = txWrites.remove(txId);
         if (buffer == null) return true;
 
-        // Check for write-write conflicts and apply
+        // Phase 1 — validate the whole write set before applying anything.
+        // First-writer-wins: if another transaction committed a newer version of
+        // a key in our write set after our snapshot, reject the commit and leave
+        // the version store untouched. Callers must roll back and retry.
+        for (var key : buffer.writes.keySet()) {
+            var chain = versionStore.get(key);
+            if (chain != null && chain.head != null && chain.head.commitTs > readTimestamp) {
+                return false;
+            }
+        }
+
+        // Phase 2 — apply. New versions are prepended to each key's chain
+        // (versionStore is a ConcurrentHashMap; chain prepends are immutable).
         for (var entry : buffer.writes.entrySet()) {
             var key = entry.getKey();
             var record = entry.getValue();
             var chain = versionStore.get(key);
-            
-            // Optimistic conflict detection: if someone committed after our read timestamp
-            // but before our commit timestamp, we have a write-write conflict.
-            if (chain != null && chain.head != null && chain.head.commitTs > commitTs) {
-                // Conflict: another transaction wrote after us
-                return false;
-            }
-            
-            // Create new version with updated metadata
+
             var metadata = record.metadata().nextVersion(txId);
             var versionedRecord = record.withMetadata(metadata);
-            
-            // Prepend new version to the chain (lock-free: versionStore is a ConcurrentHashMap)
+
             var newChain = new VersionChain(new VersionNode(versionedRecord, commitTs, chain != null ? chain.head : null));
             versionStore.put(key, newChain);
         }

@@ -3,7 +3,7 @@
 # JunifyDB
 
 **The embedded dual-engine database for Java.**  
-NoSQL + ANSI SQL — one JAR, zero infrastructure, no Docker, no daemon.
+NoSQL + a built-in SQL engine — one JAR, zero infrastructure, no Docker, no daemon.
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Java](https://img.shields.io/badge/Java-17%2B-orange.svg)](https://openjdk.org/)
@@ -65,12 +65,12 @@ var db = JunifyDB.create(JunifyDB.embed()
     .buildConfig());
 ```
 
-### ③ Dual-Engine: NoSQL + ANSI SQL Over the Same Data
+### ③ Dual-Engine: NoSQL + SQL Over the Same Data
 
 Most databases force you to choose a paradigm. JunifyDB does not. The same data collection is simultaneously accessible via:
 
 - **Fluent NoSQL API** — document queries, criteria builders, key-value ops
-- **ANSI SQL engine** — `SELECT`, `INSERT`, `GROUP BY`, `JOIN`, `BETWEEN`, `LIKE`
+- **Built-in SQL engine** — `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `GROUP BY`, `JOIN`, `BETWEEN`, `LIKE` (an implementation-defined dialect, not a full ANSI:92 grammar — no DDL, no sequences, no views)
 
 Both engines share the same in-memory or disk storage substrate. Switch paradigms mid-query. Mix freely.
 
@@ -126,13 +126,13 @@ JunifyDB occupies the **upper-right quadrant**: embedded and multi-model. A nich
 | **Primary model** | Multi-Model (Doc, KV, Column) | Relational SQL | Relational SQL | Document only | Key-Value only |
 | **Document queries** | ✅ Native | ⚠️ JSON functions | ⚠️ JSON1 ext | ✅ Native | ❌ |
 | **Redis structures** | ✅ Native | ❌ | ❌ | ❌ | ❌ |
-| **ANSI SQL** | ✅ Built-in | ✅ Full | ✅ Full | ❌ | ❌ |
+| **SQL (SELECT/INSERT/UPDATE/DELETE)** | ✅ Built-in (dialect) | ✅ Full | ✅ Full | ❌ | ❌ |
 | **100% Pure Java** | ✅ | ✅ | ❌ (C binaries) | ❌ (downloads binary) | ❌ (C++ / JNI) |
-| **Startup time** | **< 15 ms** | ~25 ms | ~30 ms | 3,000–8,000 ms | ~50 ms |
+| **Startup time** | single-digit ms (measured in-process) | ~25 ms | ~30 ms | 3,000–8,000 ms | ~50 ms |
 | **Spring Boot starter** | ✅ | ✅ | ⚠️ | ❌ | ❌ |
 | **Quarkus extension** | ✅ | ⚠️ | ❌ | ❌ | ❌ |
 | **Micronaut integration** | ✅ | ⚠️ | ❌ | ❌ | ❌ |
-| **Disk persistence** | WAL · B-Tree · LSM | Page store | B-Tree | WiredTiger | LSM |
+| **Disk persistence** | WAL · JSON snapshots · LSM (B-Tree is heap-resident) | Page store | B-Tree | WiredTiger | LSM |
 
 ---
 
@@ -182,7 +182,7 @@ JunifyDB occupies the **upper-right quadrant**: embedded and multi-model. A nich
 ```java
 try (var db = JunifyDB.inMemory()) {
 
-    // ── ANSI SQL ──────────────────────────────────────────────
+    // ── SQL ───────────────────────────────────────────────────
     db.sql("INSERT INTO products (id, title, price) VALUES ('p1', 'Keyboard', 75.0)");
     var results = db.sql("SELECT * FROM products WHERE price BETWEEN 50 AND 100");
     System.out.println("Found: " + results.size());
@@ -348,20 +348,20 @@ Switch engines in one line — the query and collection API is identical across 
 
 ---
 
-## Performance (Measured — Not Estimated)
+## Performance (Indicative — Re-Run It Yourself)
 
-All benchmarks run in-process on JVM with `IN_MEMORY` engine, `mvn test` → **6/6 PASS, 0 errors**.
+These are informal throughput figures from the demo/stress suite on one development machine — not certified benchmarks and not comparable across hardware. Run your own measurements with the demo harness before drawing conclusions.
 
 | Scenario | Threads | Operations | Throughput | p99 Latency | Error Rate |
 |---|---|---|---|---|---|
-| Concurrent Writes | 10 | 1,000 | 2,155 ops/sec | 305 ms | **0%** |
-| 50-Thread Safety | 50 | 2,500 | 14,881 ops/sec | 1 ms | **0%** |
-| Read-After-Write | 8 | 400 | 7,843 ops/sec | 32 ms | **0 violations** |
-| Mixed (Doc + KV) | 12 | 1,200 | 54,545 ops/sec | 1 ms | **0%** |
-| Saturation (2 sec) | 20 | 12,815 | 6,420 ops/sec | 10 ms | **0%** |
+| Concurrent Writes | 10 | 1,000 | 2,155 ops/sec | 305 ms | 0% |
+| 50-Thread Safety | 50 | 2,500 | 14,881 ops/sec | 1 ms | 0% |
+| Read-After-Write | 8 | 400 | 7,843 ops/sec | 32 ms | 0 violations |
+| Mixed (Doc + KV) | 12 | 1,200 | 54,545 ops/sec | 1 ms | 0% |
+| Saturation (2 sec) | 20 | 12,815 | 6,420 ops/sec | 10 ms | 0% |
 
-> Read-after-write consistency: **0 violations** across 400 concurrent write+read pairs.  
-> Batch ingestion: 10,000 documents in chunked atomic batches with full rollback on error.
+> Read-after-write consistency: 0 violations across 400 concurrent write+read pairs.  
+> Batch ingestion: 10,000 documents in chunked atomic batches with rollback on error.
 
 ---
 
@@ -380,15 +380,15 @@ Open `http://localhost:8080` to access:
 - 🔑 **Key-Value Store** — get/put/delete with TTL management
 - 🔢 **Redis Structures** — Lists, Sets, Hashes with visual inspection
 - 🧩 **Wide-Column Families** — Row/column matrix viewer
-- 🤖 **ANSI SQL Studio** — Interactive SQL editor with result table
-- 📡 **Change Data Capture** — Live CDC event stream viewer
-- 🔐 **Audit Trail** — Tamper-evident operation log
+- 🤖 **SQL Studio** — Interactive SQL editor with result table
+- 📡 **Change Data Capture** — CDC connector status and event viewer
+- 🔐 **Audit Trail** — In-memory operation log (recent events; not persisted, not cryptographically verified)
 
 ---
 
 ## Demonstration Ecosystem
 
-A complete, production-grade demo suite in [`demo/`](demo/) covering an **E-Commerce & Order Management** domain:
+A complete demo suite in [`demo/`](demo/) covering an **E-Commerce & Order Management** domain:
 
 | Demo | Framework | What it demonstrates |
 |---|---|---|
@@ -437,10 +437,10 @@ curl -X PUT http://localhost:8080/api/kv/sessions/tok-abc \
 ## Target Use Cases
 
 ### ✅ Integration Testing Without Docker
-Replace Testcontainers and Docker containers in your CI pipeline. JunifyDB starts in **under 15 ms** in the same JVM process. No daemon, no registry pull, no port binding.
+Replace Testcontainers and Docker containers in your CI pipeline. JunifyDB starts in milliseconds in the same JVM process. No daemon, no registry pull, no port binding.
 
 ### ✅ Edge & Desktop JVM Applications
-JavaFX apps, POS systems, barcode scanners, IoT gateways. A single JAR with file-backed persistence, zero native dependencies, and crash recovery via WAL.
+JavaFX apps, POS systems, barcode scanners, IoT gateways. A single JAR with file-backed persistence, zero native dependencies, and WAL-based recovery of writes that were not yet flushed.
 
 ### ✅ In-Process Caching & Session Stores
 Sub-microsecond local key-value lookups without Redis network round-trips. Built-in TTL, atomic increments, and Redis-style data structures.

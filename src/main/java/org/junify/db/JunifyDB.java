@@ -107,6 +107,7 @@ public class JunifyDB implements Closeable {
 
     public static JunifyDB create(JunifyDBConfig config) {
         var db = new JunifyDB(config);
+        db.materializePersistedCollections();
         if (config.consoleConfig() != null && config.consoleConfig().enabled()) {
             try {
                 db.startConsoleServer(config.consoleConfig(), config.securityConfig());
@@ -132,6 +133,20 @@ public class JunifyDB implements Closeable {
     public java.util.Set<String> getCollectionNames() {
         checkOpen();
         return java.util.Collections.unmodifiableSet(collections.keySet());
+    }
+
+    /**
+     * Re-exposes collections that exist in the storage engine from a previous
+     * run. Without this, data persisted by an earlier process (e.g. via SQL)
+     * is invisible to {@link #documentCollection(String)} callers after a
+     * restart until they happen to request the collection by name.
+     */
+    private void materializePersistedCollections() {
+        for (String name : engine.collectionNames()) {
+            if (!collections.containsKey(name)) {
+                documentCollection(name);
+            }
+        }
     }
 
     /**

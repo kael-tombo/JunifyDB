@@ -60,6 +60,8 @@ public class FileEngine implements StorageEngine {
         try {
             Files.createDirectories(dataDir);
             loadAll();
+            replayWal();
+            recordPersistedCollections();
         } catch (IOException e) {
             throw new RuntimeException("Failed to initialize file engine", e);
         }
@@ -192,6 +194,7 @@ public class FileEngine implements StorageEngine {
     }
 
     private synchronized void asyncFlush() {
+        recordPersistedCollections();
         if (!dirty.getAndSet(false)) return;
         
         writer.execute(() -> {
@@ -208,6 +211,7 @@ public class FileEngine implements StorageEngine {
     }
 
     private synchronized void syncFlush() {
+        recordPersistedCollections();
         for (var entry : store.entrySet()) {
             try {
                 var file = dataDir.resolve(entry.getKey() + ".json");
@@ -279,6 +283,99 @@ public class FileEngine implements StorageEngine {
                             throw new RuntimeException("Failed to load: " + file, e);
                         }
                     });
+        }
+    }
+
+    /**
+     * Collections discovered on disk during startup. The File engine persists one
+     * JSON file per collection, so these names are authoritative for data that
+     * exists on disk.
+     */
+    private java.util.Set<String> persistedCollections = java.util.Collections.emptySet();
+
+    @Override
+    public java.util.Set<String> collectionNames() {
+        return java.util.Collections.unmodifiableSet(persistedCollections);
+    }
+
+    /**
+     * Records the set of collections found on disk so the facade can re-expose
+     * previously persisted collections after a restart.
+     */
+    private void recordPersistedCollections() {
+        this.persistedCollections = java.util.Set.copyOf(store.keySet());
+    }
+
+    /**
+     * Replays the write-ahead log on startup.
+     *
+     * <p>The WAL records every {@code put}/{@code delete} at write time, but the
+     * JSON snapshot files are written asynchronously (or only on explicit
+     * {@link #flush()}). Entries newer than the last {@code CHECKPOINT} marker
+     * were never persisted to the JSON files, so without replay they are lost on
+     * an unclean shutdown — the engine would silently violate its durability
+     * contract. This method applies those entries to the in-memory store and
+     * flushes them out.
+     */
+    private void replayWal() {
+        try {
+            var walFile = dataDir.resolve(".wal").resolve("wal.log");
+            if (!Files.exists(walFile)) return;
+
+            // Entries up to the last CHECKPOINT marker are already reflected in
+            // the JSON snapshot files; only newer entries need replay.
+            long lastCheckpointSeq = -1;
+            for (String line : Files.readAllLines(walFile)) {
+                if (line.startsWith("CHECKPOINT:")) {
+                    try {
+                        lastCheckpointSeq = Long.parseLong(line.substring(11));
+                    } catch (NumberFormatException ignored) {
+                        // tolerate a torn checkpoint line
+                    }
+                }
+            }
+
+            int recovered = 0;
+            for (String line : Files.readAllLines(walFile)) {
+                // LogEntry format: sequence|timestamp|TYPE|collection|key|value
+                String[] parts = line.split("\\|", 6);
+                if (parts.length < 5) continue;
+
+                String type = parts[2];
+                if (!"PUT".equals(type) && !"DELETE".equals(type)) continue;
+
+                long seq;
+                try {
+                    seq = Long.parseLong(parts[0]);
+                } catch (NumberFormatException ignored) {
+                    continue; // tolerate a torn/corrupt line
+                }
+                if (lastCheckpointSeq >= 0 && seq <= lastCheckpointSeq) continue;
+
+                String collection = parts[3];
+                String key = parts[4];
+                String value = parts.length > 5 ? parts[5] : null;
+
+                var col = store.computeIfAbsent(collection, k -> new ConcurrentHashMap<>());
+                if ("PUT".equals(type)) {
+                    col.put(key, value);
+                } else {
+                    col.remove(key);
+                }
+                recovered++;
+            }
+
+            if (recovered > 0) {
+                recordPersistedCollections();
+                if (asyncEnabled) {
+                    dirty.set(true);
+                } else {
+                    syncFlush();
+                }
+                System.out.println("FileEngine: recovered " + recovered + " operations from WAL");
+            }
+        } catch (IOException e) {
+            System.err.println("FileEngine WAL recovery failed: " + e.getMessage());
         }
     }
 }

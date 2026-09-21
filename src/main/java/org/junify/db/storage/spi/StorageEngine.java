@@ -44,6 +44,14 @@ public interface StorageEngine {
 
     List<String> scan(String collection, Predicate<String> filter);
 
+    /**
+     * Names of collections persisted by this engine and discoverable on restart.
+     * Default: empty — engines without on-disk per-collection identity report none.
+     */
+    default java.util.Set<String> collectionNames() {
+        return java.util.Collections.emptySet();
+    }
+
     Set<String> keys(String collection);
 
     int size();

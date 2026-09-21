@@ -41,25 +41,8 @@ jobs:
           name: test-results-java-${{ matrix.java }}
           path: target/surefire-reports/
 
-  docker:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: false
-          tags: jnosql-embed:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+  # NOTE (release audit): Docker image job removed — no Dockerfile exists in the
+  # repository. Re-add alongside a Dockerfile if/when an official image is published.
 
   benchmark:
     needs: build
@@ -77,7 +60,7 @@ jobs:
           cache: maven
 
       - name: Run Benchmarks
-        run: mvn -B -Pbenchmark clean package exec:java -Dexec.mainClass=org.jnosql.embed.BenchmarkRunner
+        run: mvn -B -Pbenchmark clean package exec:java -Dexec.mainClass=org.junify.db.benchmark.BenchmarkRunner
 
       - name: Upload Benchmark Results
         uses: actions/upload-artifact@v4

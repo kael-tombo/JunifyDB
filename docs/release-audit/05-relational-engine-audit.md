@@ -1,0 +1,38 @@
+# 05 — Relational (SQL) Engine Audit
+
+## Scope
+The built-in SQL engine: lifecycle, execution surface, correctness boundaries.
+
+## Expected Behavior
+Per README (as corrected): a built-in SQL dialect over collections — SELECT (with JOIN, GROUP BY, WHERE, ORDER BY, LIMIT), INSERT, UPDATE, DELETE; parameter binding; result mapping to entities; errors surfaced clearly.
+
+## Current Implementation
+- `org.junify.db.sql.SqlParser`, `org.junify.db.sql.engine.SqlEngine` (~950+ lines), `SqlResultSet`/`SqlRow`.
+- Facade entries: `db.sql(String, Object...)`, `db.sql(String, Class<T>, Object...)`.
+- UPDATE/DELETE return update counts (`SqlResultSet.ofUpdate(count, "UPDATE"/"DELETE")` — verified in source lines 342–392).
+
+## Validation Performed
+- `SqlEngineTest` (9 tests) green in baseline and post-fix runs.
+- Live execution via console SQL Studio: `INSERT INTO products ...` then `SELECT * FROM products` returned the row; persisted `products.json` on disk.
+- Regression: `ReleaseAuditRegressionTest.persistedCollectionsAreRediscoveredAfterRestart` re-runs SQL across a restart.
+
+## Evidence
+- Baseline: 669/669 tests pass including SQL suite.
+- SQL INSERT written rows visible in REST `/api/collections/products` and on disk (preview-session evidence).
+
+## Findings
+| ID | Status | Severity | Description |
+|---|---|---|---|
+| SQL-01 | CONFIRMED | Medium | Dialect is a subset: no DDL, no views/sequences/transactions-via-SQL, no subquery coverage claim. Documented as such in README. Not a defect — a boundary. |
+| SQL-02 | CONFIRMED | Medium | No JDBC driver; `27-` records the absence and forbids JDBC claims. |
+| SQL-03 | PARTIALLY VERIFIED | Low | Constraint enforcement (PK uniqueness, NOT NULL) not systematically audited at SQL level; document-level id uniqueness exists via `upsert` semantics. Listed in 55-feature-test-traceability as a coverage gap. |
+| SQL-04 | CONFIRMED (fixed) | High | SQL-created collections were invisible after restart (shared root cause with B-05; fixed via collection rediscovery). |
+
+## Improvement Plan
+Add a SQL feature matrix test class enumerating supported/unsupported grammar with asserts; publish it as documentation.
+
+## Acceptance Criteria
+SQL suite green; README SQL section matches parser capabilities; restart rediscovery test green (all verified).
+
+## Final Status
+**CONDITIONAL PASS**
