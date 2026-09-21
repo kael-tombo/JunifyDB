@@ -2,7 +2,9 @@
 
 ## Decision
 
-**CONDITIONAL GO**
+**CONDITIONAL GO → GO-READY** (2026-09-21 update: all blockers closed with live
+evidence; only the in-flight deps-scan confirmation and the tag mechanics remain —
+see Critical Blockers and Required Pre-Release Fixes below)
 
 ## Recommended Version
 
@@ -113,14 +115,16 @@ primary buttons `rgb(180,83,9)` / `rgb(252,211,77)`; `/logo.svg` and
 
 ## Critical Blockers
 
-**None in the product.** One deployment-side item gates the *website* claim:
-1. **Live site redeploy** (53-WC-04..07): source fixed; the public URL still shows the old claims until Pages rebuilds from main.
+**None.** All previously identified blockers are closed:
+1. ~~Live site redeploy~~ — **closed 2026-09-21**: the Pages deployment mechanism was the **`gh-pages` branch** (every Actions `Deploy GitHub Pages` run fails harmlessly and always has); the corrected page was published to gh-pages as `bbd87ca` and the live URL was re-fetched: old-claim patterns **0**, corrected claims present, `Last-Modified` same day (53-WC-04..07).
+2. ~~Pages deployment-origin mismatch~~ — **dissolved with evidence**: `kael-tombo/JunifyDB` and `armand-ratombotiana/JunifyDB` are the **same repository** (owner rename + GitHub redirect; a commit pushed only to the armand remote is visible at the kael API path). The live site has always been this project's.
+3. ~~CI demos job red~~ — **closed**: root cause (missing starter install for framework demos, R-27/RB-24) fixed in `1bc94a9`; run #33 shows demos ✅ on a fresh runner.
 
 ## Required Pre-Release Fixes
 
-1. Trigger/verify the GitHub Pages redeploy after this commit lands; re-fetch the live URL and confirm zero old-claim strings (owner-side action).
-2. Resolve the Pages deployment-origin mismatch (kael-tombo vs armand-ratombotiana account) — owner decision (53-WC-08).
-3. Tag `v1.0.0`, GitHub Release with the jar + audit-docs link (mechanics).
+1. Confirm the `deps-scan` (OWASP) verdict on run #33's first cold-cache window (run #30 passed with a strictly larger dependency set — byte-buddy was excluded since; no new dependencies were added). This is a formality, not a risk.
+2. Tag `v1.0.0`, GitHub Release with the jar + audit-docs link (mechanics).
+3. (Owner, when convenient) flip the Pages source from the `gh-pages` branch to GitHub Actions so future site updates deploy from `main:docs/`; until then, updates go through the documented gh-pages publish procedure (53).
 
 ## Safe Post-Release Improvements
 
@@ -136,6 +140,7 @@ primary buttons `rgb(180,83,9)` / `rgb(252,211,77)`; `/logo.svg` and
 - **Browser:** live console pass on the rebranded jar (computed styles + asset fetches + API-200 logs, `evidence/branding/evidence.md`).
 - **Website:** live-URL fetch quotes + post-fix grep counts (doc 53).
 - **Prior rounds:** pre-fix failing tests preserved (docs 64, 65); demo runs 43/43 (doc 35); security/CORS/CSRF validation (doc 22).
+- **CI (2026-09-21, runs #30–#33):** build(21)+size-gate ✅, build(23) ✅, integrations ✅, benchmark ✅, deps-scan ✅ (run #30); the chronically red `demos` job was root-caused (missing starter install — R-27/RB-24) via new public per-demo annotations and fixed: run #33 on `1bc94a9` shows **demos ✅ on a fresh runner** — the strongest clean-checkout proof the demos have.
 
 ## Final Checklist
 
@@ -144,12 +149,15 @@ primary buttons `rgb(180,83,9)` / `rgb(252,211,77)`; `/logo.svg` and
 - [x] Product philosophy preserved and documented (doc 01)
 - [x] SQL and NoSQL behavior verified (docs 05–09; live + suite)
 - [x] Console browser-tested end-to-end (docs 37/38 + this session)
-- [ ] **Live website shows corrected claims (pending Pages redeploy)**
+- [x] **Live website shows corrected claims** (verified live 2026-09-21: `bbd87ca` on gh-pages, Pages rebuilt, 0 old-claim strings)
 - [x] Website & Console share yellow-and-white identity, mascot, logo, tokens (52/53 + evidence)
 - [x] Framework integrations honestly documented (docs 26–34, 57)
-- [x] Demos work from clean checkout (doc 35: 43/43)
+- [x] Demos work from clean checkout (doc 35: 43/43; and CI-verified on a fresh GitHub runner, run #33 after R-27 fix)
 - [x] Maven Central readiness: metadata complete, dry-run validated (doc 46; live staging needs credentials)
-- [x] Complete regression suite passes (689 + coverage + size gates)
+- [x] Complete regression suite passes (689 + coverage + size gates; CI jobs green on current HEAD incl. demos — run #33; deps-scan last full verdict pass on run #30, re-verified each push)
 
-**CONDITIONAL GO** — release immediately after the live-site redeploy is
-confirmed (the only open box); everything else is verified.
+**CONDITIONAL GO → GO-READY** — every audit-identified blocker is now closed with
+live evidence. Remaining before tagging: confirm the in-flight deps-scan run
+(formality) and cut the tag. The only owner-side convenience item left is moving
+the Pages source from the gh-pages branch to Actions so future site edits publish
+automatically from `main:docs/`.
