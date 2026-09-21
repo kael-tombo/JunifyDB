@@ -140,7 +140,7 @@ jobs:
       - name: Install core and demo-common
         run: |
           ./mvnw -B clean install -DskipTests
-          (cd demo/demo-common && ./mvnw -B install -DskipTests)
+          (cd demo/demo-common && mvn -B install -DskipTests)  # runners preinstall mvn; no wrapper in demo-common
 
       - name: Run all demo test suites
         run: |
@@ -150,7 +150,7 @@ jobs:
                    annotation-showcase-demo batch-processing-demo \
                    load-and-stress-demo; do
             echo "::group::Demo $d"
-            if (cd "demo/$d" && ./mvnw -B clean test); then
+            if (cd "demo/$d" && mvn -B clean test); then
               echo "::notice title=Demo $d::PASSED"
             else
               echo "::error title=Demo $d failed::mvn clean test exited non-zero; see the group above for the surefire failure summary"
