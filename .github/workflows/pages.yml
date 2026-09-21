@@ -24,6 +24,11 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          # Auto-enable Pages with the "GitHub Actions" source. Without this,
+          # deploy-pages fails with "deployment not allowed" when the repo's
+          # Pages source was never switched to Actions (release audit 53-WC-08).
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
