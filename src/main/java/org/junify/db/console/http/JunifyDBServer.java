@@ -2692,6 +2692,12 @@ public class JunifyDBServer {
                     var rs = db.sql(sql, params);
                     long duration = System.currentTimeMillis() - start;
 
+                    // R-28: mutations issued through the SQL console path must be
+                    // audited exactly like REST CRUD. Parsing is intentionally
+                    // lexical-only (no engine round-trip), so it cannot widen the
+                    // engine's attack surface; audit is evidentiary, not a filter.
+                    auditSqlStatements(sql, getClientIp(exchange));
+
                     List<Map<String, Object>> rows = new ArrayList<>();
                     for (var r : rs.getRows()) {
                         rows.add(r.asMap());
@@ -2714,5 +2720,99 @@ public class JunifyDBServer {
                 sendJson(exchange, 405, Map.of("error", "Method not allowed. Use POST with JSON payload."));
             }
         }
+
+        /**
+         * R-28: audits every mutation statement in a console SQL batch so the
+         * SQL Studio path leaves the same evidentiary trail as REST CRUD
+         * (logAuditEvent keeps the in-memory ring and the JSONL disk log in
+         * step). Lexical split on semicolons outside quotes; reads are not
+         * audited. Best-effort: a parsing failure never fails the SQL call.
+         */
+        private void auditSqlStatements(String sql, String clientIp) {
+            try {
+                for (String raw : splitSqlStatements(sql)) {
+                    String stmt = raw.strip();
+                    if (stmt.isEmpty()) continue;
+                    String upper = stmt.toUpperCase();
+                    String op;
+                    if (upper.startsWith("INSERT")) op = "INSERT";
+                    else if (upper.startsWith("UPDATE")) op = "UPDATE";
+                    else if (upper.startsWith("DELETE")) op = "DELETE";
+                    else if (upper.startsWith("CREATE")) op = "CREATE";
+                    else if (upper.startsWith("DROP")) op = "DROP";
+                    else continue; // reads and unsupported statements are not audited
+                    String resource = extractSqlTarget(stmt);
+                    logAuditEvent(op, resource, null, "SUCCESS", clientIp, "SQL console execution");
+                }
+            } catch (Exception e) {
+                logger.warn("[AUDIT] SQL statement audit skipped (fail-open): {}", e.toString());
+            }
+        }
+    }
+
+    /** Package-visible for testing: lexical split of a SQL batch on semicolons
+     *  that are not inside single quotes, double quotes, or comments. */
+    static java.util.List<String> splitSqlStatements(String sql) {
+        var statements = new java.util.ArrayList<String>();
+        if (sql == null || sql.isBlank()) return statements;
+        StringBuilder current = new StringBuilder();
+        boolean inSingle = false, inDouble = false, inLineComment = false, inBlockComment = false;
+        for (int i = 0; i < sql.length(); i++) {
+            char c = sql.charAt(i);
+            if (inLineComment) {
+                current.append(c);
+                if (c == '\n') inLineComment = false;
+                continue;
+            }
+            if (inBlockComment) {
+                current.append(c);
+                if (c == '*' && i + 1 < sql.length() && sql.charAt(i + 1) == '/') {
+                    current.append(sql.charAt(++i));
+                    inBlockComment = false;
+                }
+                continue;
+            }
+            if (inSingle) {
+                current.append(c);
+                if (c == '\'') {
+                    if (i + 1 < sql.length() && sql.charAt(i + 1) == '\'') {
+                        current.append(sql.charAt(++i)); // escaped quote
+                    } else {
+                        inSingle = false;
+                    }
+                }
+                continue;
+            }
+            if (inDouble) {
+                current.append(c);
+                if (c == '"') inDouble = false;
+                continue;
+            }
+            if (c == '\'' ) { inSingle = true; current.append(c); continue; }
+            if (c == '"') { inDouble = true; current.append(c); continue; }
+            if (c == '-' && i + 1 < sql.length() && sql.charAt(i + 1) == '-') {
+                inLineComment = true; current.append(c); continue;
+            }
+            if (c == '/' && i + 1 < sql.length() && sql.charAt(i + 1) == '*') {
+                inBlockComment = true; current.append(c); continue;
+            }
+            if (c == ';') {
+                statements.add(current.toString());
+                current.setLength(0);
+                continue;
+            }
+            current.append(c);
+        }
+        if (!current.toString().isBlank()) statements.add(current.toString());
+        return statements;
+    }
+
+    /** Package-visible for testing: best-effort extraction of the collection or
+     *  table a SQL statement targets (INSERT/UPDATE/DELETE FROM/CREATE/DROP). */
+    static String extractSqlTarget(String stmt) {
+        var m = java.util.regex.Pattern
+                .compile("(?i)\\b(?:INSERT\\s+INTO|UPDATE|DELETE\\s+FROM|CREATE\\s+TABLE|DROP\\s+TABLE)\\s+([\\w\".]+)")
+                .matcher(stmt);
+        return m.find() ? m.group(1) : "sql";
     }
 }
