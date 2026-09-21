@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JunifyDB — The Embedded Dual-Engine Database for Java</title>
-  <meta name="description" content="JunifyDB is the embedded multi-model database for Java. NoSQL + ANSI SQL in a single JAR. Zero Docker. Zero daemon. Zero infrastructure. Spring Boot, Quarkus, Micronaut ready." />
+  <meta name="description" content="JunifyDB is the embedded multi-model database for Java. NoSQL + built-in SQL in a single JAR. Zero Docker. Zero daemon. Zero infrastructure. Spring Boot, Quarkus, Micronaut ready." />
   <meta name="keywords" content="JunifyDB, embedded database, Java, NoSQL, SQL, Spring Boot, Quarkus, Micronaut, JNoSQL, JPA, H2 alternative" />
   <meta property="og:title" content="JunifyDB — The Embedded Dual-Engine Database for Java" />
-  <meta property="og:description" content="NoSQL + ANSI SQL in a single JAR. Documents, Key-Value, Redis structures, Wide-Column — zero Docker, zero daemon." />
+  <meta property="og:description" content="NoSQL + built-in SQL in a single JAR. Documents, Key-Value, Redis structures, Wide-Column — zero Docker, zero daemon." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://armand-ratombotiana.github.io/JunifyDB/" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -1020,7 +1020,7 @@
     <div class="mascot-speech-bubble">
       <div class="mascot-name-tag">⚡ Volt says</div>
       <div class="mascot-speech-text">
-        "Why wait <strong>8 seconds</strong> for Docker to spin up? I start in <strong>&lt;15ms</strong> directly inside your JVM!"
+        "Why wait <strong>8 seconds</strong> for Docker to spin up? I start in <strong>milliseconds</strong> directly inside your JVM!"
       </div>
     </div>
   </div>
@@ -1031,7 +1031,7 @@
   </h1>
 
   <p class="hero-sub">
-    NoSQL + ANSI SQL in a single JAR. Documents, Key-Value, Redis structures,
+    NoSQL + built-in SQL in a single JAR. Documents, Key-Value, Redis structures,
     Wide-Column — all in-process, zero infrastructure, zero Docker.
   </p>
 
@@ -1047,18 +1047,18 @@
 
   <div class="hero-stats">
     <div class="hero-stat">
-      <span class="hero-stat-value">&lt;15ms</span>
-      <span class="hero-stat-label">Cold Start Time</span>
+      <span class="hero-stat-value">ms-class</span>
+      <span class="hero-stat-label">Cold Start (indicative)</span>
     </div>
     <div class="hero-stat-sep"></div>
     <div class="hero-stat">
-      <span class="hero-stat-value">85,000+</span>
-      <span class="hero-stat-label">Writes / Sec</span>
+      <span class="hero-stat-value">18,000+</span>
+      <span class="hero-stat-label">Ops/Sec — stress demo (indicative)</span>
     </div>
     <div class="hero-stat-sep"></div>
     <div class="hero-stat">
-      <span class="hero-stat-value">120,000+</span>
-      <span class="hero-stat-label">Reads / Sec</span>
+      <span class="hero-stat-value">50</span>
+      <span class="hero-stat-label">Concurrent Threads — stress demo</span>
     </div>
     <div class="hero-stat-sep"></div>
     <div class="hero-stat">
@@ -1087,7 +1087,7 @@
           Copy
         </button>
       </div>
-      <pre class="code-body" id="heroCode"><code><span class="cmt">// 1. Zero config — starts in &lt;15ms inside your JVM</span>
+      <pre class="code-body" id="heroCode"><code><span class="cmt">// 1. Zero config — starts in milliseconds inside your JVM</span>
 <span class="cls">JunifyDB</span> db = <span class="cls">JunifyDB</span>.<span class="fn">inMemory</span>();
 
 <span class="cmt">// 2. Fluent NoSQL Document API</span>
@@ -1101,7 +1101,7 @@ db.<span class="fn">collection</span>(<span class="str">"users"</span>).<span cl
 db.<span class="fn">kv</span>().<span class="fn">list</span>(<span class="str">"events"</span>).<span class="fn">push</span>(<span class="str">"user_login"</span>);
 db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"active_tags"</span>).<span class="fn">add</span>(<span class="str">"embedded"</span>);
 
-<span class="cmt">// 4. Same data, instant ANSI SQL query!</span>
+<span class="cmt">// 4. Same data, instant built-in SQL query!</span>
 <span class="cls">SqlResultSet</span> rs = db.<span class="fn">sql</span>(<span class="str">"SELECT name, role FROM users WHERE role = 'ADMIN'"</span>);
 <span class="kw">while</span> (rs.<span class="fn">next</span>()) {
     <span class="cls">System</span>.out.<span class="fn">println</span>(rs.<span class="fn">getString</span>(<span class="str">"name"</span>));
@@ -1116,14 +1116,14 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
     <div style="text-align: center;">
       <span class="section-label">Interactive Playground</span>
       <h2 class="section-title">Test Dual-Engine Queries <span class="text-gradient">In Real Time</span></h2>
-      <p class="section-desc" style="margin: 0 auto;">Experience how JunifyDB seamlessly bridges NoSQL document criteria and ANSI SQL against the same underlying in-process engine.</p>
+      <p class="section-desc" style="margin: 0 auto;">Experience how JunifyDB seamlessly bridges NoSQL document criteria and built-in SQL against the same underlying in-process engine.</p>
     </div>
 
     <div class="playground-box">
       <div class="playground-nav">
         <div class="playground-tabs">
           <button class="pg-tab active" onclick="switchPlaygroundTab('nosql')">📄 NoSQL Document API</button>
-          <button class="pg-tab" onclick="switchPlaygroundTab('sql')">⚡ ANSI SQL Engine</button>
+          <button class="pg-tab" onclick="switchPlaygroundTab('sql')">⚡ built-in SQL Engine</button>
         </div>
         <button class="pg-run-btn" onclick="executePlaygroundQuery()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -1144,7 +1144,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
         <div class="pg-result-panel">
           <div class="pg-result-header">
             <span>JVM In-Memory Result</span>
-            <span class="pg-latency-badge" id="pgLatency">⚡ 0.08 ms</span>
+            <span class="pg-latency-badge" id="pgLatency">⚡ in-process</span>
           </div>
           <pre class="pg-output-json" id="pgOutput"><code>[
   {
@@ -1200,7 +1200,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
         <div class="pillar-icon-box">🔀</div>
         <div class="pillar-title">Dual-Engine: NoSQL + SQL</div>
         <div class="pillar-desc">
-          Access your documents via fluent NoSQL queries or standard ANSI SQL simultaneously. Both paradigms run against the exact same underlying storage substrate.
+          Access your documents via fluent NoSQL queries or standard built-in SQL simultaneously. Both paradigms run against the exact same underlying storage substrate.
         </div>
         <div class="pillar-code">db.sql("SELECT * FROM orders")</div>
       </div>
@@ -1218,7 +1218,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
         <div class="pillar-icon-box">📊</div>
         <div class="pillar-title">Observable by Design</div>
         <div class="pillar-desc">
-          Every mutation emits a lifecycle event. Built-in atomic metrics counters, Change Data Capture (CDC), and tamper-evident audit logs are active out of the box.
+          Every mutation emits a lifecycle event. Built-in atomic metrics counters, Change Data Capture (CDC), and a bounded audit trail (in-memory view with a durable JSONL copy) are active out of the box.
         </div>
         <div class="pillar-code">db.events().subscribe(EventType.INSERT)</div>
       </div>
@@ -1261,7 +1261,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
         <div class="quad-cell highlight">
           <div class="quad-cell-label">⚡ Embedded · Multi-Model</div>
           <div class="quad-cell-name">JunifyDB</div>
-          <div class="quad-cell-desc">Documents, Key-Value, Redis structures, Wide-Column, HNSW Vectors + ANSI SQL.</div>
+          <div class="quad-cell-desc">Documents, Key-Value, Redis structures, Wide-Column, HNSW Vectors + built-in SQL.</div>
           <span class="quad-badge gold">The Golden Standard</span>
         </div>
 
@@ -1417,31 +1417,31 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
 <section id="benchmarks" style="background: rgba(14, 16, 23, 0.4); border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border);">
   <div class="container">
     <span class="section-label">Empirical Benchmarks</span>
-    <h2 class="section-title">Verified In-Process <span class="text-gradient">Throughput</span></h2>
-    <p class="section-desc">Measured on Apple M-series / AMD Ryzen hardware under realistic concurrency benchmarks.</p>
+    <h2 class="section-title">Indicative In-Process <span class="text-gradient">Throughput</span></h2>
+    <p class="section-desc">Indicative figures from the in-repo benchmark and stress harnesses — re-run them yourself (mvn -Pbenchmark, demo/load-and-stress) on your hardware.</p>
 
     <div class="benchmarks-wrap">
       <div class="bm-grid">
         <div class="bm-card">
-          <div class="bm-number">124,000<span class="bm-unit">ops/s</span></div>
+          <div class="bm-number">10,000+<span class="bm-unit">ops/s</span></div>
           <div class="bm-label">Key-Value Point Reads</div>
-          <div class="bm-context">In-Memory Engine, 32 threads</div>
+          <div class="bm-context">In-Memory Engine, multi-threaded — indicative</div>
         </div>
 
         <div class="bm-card">
-          <div class="bm-number">86,500<span class="bm-unit">ops/s</span></div>
+          <div class="bm-number">10,000+<span class="bm-unit">ops/s</span></div>
           <div class="bm-label">Document Inserts</div>
-          <div class="bm-context">In-Memory with secondary index</div>
+          <div class="bm-context">Document inserts, indexed — indicative</div>
         </div>
 
         <div class="bm-card">
-          <div class="bm-number">48,200<span class="bm-unit">ops/s</span></div>
+          <div class="bm-number">15,000+<span class="bm-unit">ops/s</span></div>
           <div class="bm-label">Persistent Writes</div>
-          <div class="bm-context">WAL + Background checkpoint</div>
+          <div class="bm-context">FILE engine, WAL fsync — indicative</div>
         </div>
 
         <div class="bm-card">
-          <div class="bm-number">11<span class="bm-unit">ms</span></div>
+          <div class="bm-number">ms<span class="bm-unit">-class</span></div>
           <div class="bm-label">Cold Boot Latency</div>
           <div class="bm-context">From new JVM to operational</div>
         </div>
@@ -1493,8 +1493,8 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
           <button class="copy-btn" onclick="copyCode(this, 'mavenCode')">Copy XML</button>
         </div>
         <pre class="code-body" id="mavenCode"><code>&lt;<span class="kw">dependency</span>&gt;
-    &lt;<span class="kw">groupId</span>&gt;org.junify&lt;/<span class="kw">groupId</span>&gt;
-    &lt;<span class="kw">artifactId</span>&gt;junify-db&lt;/<span class="kw">artifactId</span>&gt;
+    &lt;<span class="kw">groupId</span>&gt;org.junify.db&lt;/<span class="kw">groupId</span>&gt;
+    &lt;<span class="kw">artifactId</span>&gt;junify-db-core&lt;/<span class="kw">artifactId</span>&gt;
     &lt;<span class="kw">version</span>&gt;1.0.0&lt;/<span class="kw">version</span>&gt;
 &lt;/<span class="kw">dependency</span>&gt;</code></pre>
       </div>
@@ -1503,7 +1503,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
         <div style="display:flex; justify-content:flex-end; margin-bottom: 8px;">
           <button class="copy-btn" onclick="copyCode(this, 'gradleCode')">Copy Gradle</button>
         </div>
-        <pre class="code-body" id="gradleCode"><code>implementation(<span class="str">'org.junify:junify-db:1.0.0'</span>)</code></pre>
+        <pre class="code-body" id="gradleCode"><code>implementation(<span class="str">'org.junify.db:junify-db-core:1.0.0'</span>)</code></pre>
       </div>
 
       <div class="tab-panel" id="tab-spring">
@@ -1511,7 +1511,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
           <button class="copy-btn" onclick="copyCode(this, 'springCode')">Copy Spring</button>
         </div>
         <pre class="code-body" id="springCode"><code>&lt;<span class="kw">dependency</span>&gt;
-    &lt;<span class="kw">groupId</span>&gt;org.junify&lt;/<span class="kw">groupId</span>&gt;
+    &lt;<span class="kw">groupId</span>&gt;org.junify.db&lt;/<span class="kw">groupId</span>&gt;
     &lt;<span class="kw">artifactId</span>&gt;junify-db-spring-boot-starter&lt;/<span class="kw">artifactId</span>&gt;
     &lt;<span class="kw">version</span>&gt;1.0.0&lt;/<span class="kw">version</span>&gt;
 &lt;/<span class="kw">dependency</span>&gt;</code></pre>
@@ -1522,7 +1522,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
           <button class="copy-btn" onclick="copyCode(this, 'quarkusCode')">Copy Quarkus</button>
         </div>
         <pre class="code-body" id="quarkusCode"><code>&lt;<span class="kw">dependency</span>&gt;
-    &lt;<span class="kw">groupId</span>&gt;org.junify&lt;/<span class="kw">groupId</span>&gt;
+    &lt;<span class="kw">groupId</span>&gt;org.junify.db&lt;/<span class="kw">groupId</span>&gt;
     &lt;<span class="kw">artifactId</span>&gt;junify-db-quarkus-extension&lt;/<span class="kw">artifactId</span>&gt;
     &lt;<span class="kw">version</span>&gt;1.0.0&lt;/<span class="kw">version</span>&gt;
 &lt;/<span class="kw">dependency</span>&gt;</code></pre>
@@ -1533,7 +1533,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
           <button class="copy-btn" onclick="copyCode(this, 'micronautCode')">Copy Micronaut</button>
         </div>
         <pre class="code-body" id="micronautCode"><code>&lt;<span class="kw">dependency</span>&gt;
-    &lt;<span class="kw">groupId</span>&gt;org.junify&lt;/<span class="kw">groupId</span>&gt;
+    &lt;<span class="kw">groupId</span>&gt;org.junify.db&lt;/<span class="kw">groupId</span>&gt;
     &lt;<span class="kw">artifactId</span>&gt;junify-db-micronaut-integration&lt;/<span class="kw">artifactId</span>&gt;
     &lt;<span class="kw">version</span>&gt;1.0.0&lt;/<span class="kw">version</span>&gt;
 &lt;/<span class="kw">dependency</span>&gt;</code></pre>
@@ -1554,8 +1554,8 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
         <div class="uc-icon">🧪</div>
         <div>
           <div class="uc-title">Integration Testing Without Docker</div>
-          <div class="uc-desc">Replace Testcontainers in your CI pipeline. No Docker daemon, no image registry download, no port binding conflicts. Starts in under 15ms.</div>
-          <div class="uc-highlight">⚡ 15ms vs 5+ seconds for containers</div>
+          <div class="uc-desc">Replace Testcontainers in your CI pipeline. No Docker daemon, no image registry download, no port binding conflicts. Starts in milliseconds.</div>
+          <div class="uc-highlight">⚡ milliseconds vs 5+ seconds for containers</div>
         </div>
       </div>
 
@@ -1632,7 +1632,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
     </svg>
     Junify<span>DB</span>
   </div>
-  <div class="footer-tagline">The embedded dual-engine database for Java — NoSQL + ANSI SQL, zero infrastructure.</div>
+  <div class="footer-tagline">The embedded dual-engine database for Java — NoSQL + built-in SQL, zero infrastructure.</div>
   <div class="footer-links">
     <a href="https://github.com/armand-ratombotiana/JunifyDB" target="_blank" rel="noopener">GitHub</a>
     <a href="https://github.com/armand-ratombotiana/JunifyDB/blob/main/README.md" target="_blank" rel="noopener">Documentation</a>
@@ -1713,7 +1713,7 @@ db.<span class="fn">kv</span>().<span class="fn">set</span>(<span class="str">"a
 ]</code>`;
     } else {
       editor.innerHTML = `
-        <div style="color: #64748b; margin-bottom: 8px;">-- ANSI SQL Engine execution in same JVM</div>
+        <div style="color: #64748b; margin-bottom: 8px;">-- built-in SQL Engine execution in same JVM</div>
         <div style="color: #fbbf24;">SELECT</div>
         <div style="padding-left: 20px; color: #ffffff;">customer,</div>
         <div style="padding-left: 20px; color: #ffffff;">COUNT(*) <span style="color: #fbbf24;">AS</span> order_count,</div>

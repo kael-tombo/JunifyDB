@@ -1,0 +1,37 @@
+# Website ↔ Console Consistency Audit
+
+## Scope
+Side-by-side comparison of the deployed website
+(https://kael-tombo.github.io/JunifyDB/, fetched live 2026-09-21) and the
+embedded Console, across branding, tokens, states, and **truth of claims**.
+
+## Findings
+
+| ID | Area | Finding | Status | Severity | Fix |
+|---|---|---|---|---|---|
+| 53-WC-01 | Logo/mascot | Console favicon+logo were indigo/violet; site is Volt bolt-on-amber | **FIXED** (52-BR-03) | High | Canonical SVGs now shared |
+| 53-WC-02 | Accent color | Console sky-blue `#38bdf8`/`#0284c7` vs site amber | **FIXED** (52-BR-01/02) | High | Amber family with AA/AAA contrast |
+| 53-WC-03 | Favicon | Console favicon was an indigo DB-cylinder, not Volt | **FIXED** (52-BR-03) | Medium | Volt bolt favicon |
+| 53-WC-04 | **Claims** | **Live site says "NoSQL + ANSI SQL"** — the engine is a built-in dialect, not ANSI (doc 08) | OPEN → **fix applied to `docs/index.html` this audit** | **High** | Wording corrected in site source; must redeploy to take effect live |
+| 53-WC-05 | **Claims** | **Live site claims "<15 ms cold start", "85,000+/124,000 ops/s", "Measured"** — only the local stress demo's indicative figures are reproducible (doc 43) | OPEN → **fix applied to `docs/index.html`** | **High** | Claims now marked indicative; redeploy required |
+| 53-WC-06 | **Claims** | **Live site claims "tamper-evident audit logs"** — audit is a memory ring + JSONL copy (docs 22, R-24) | OPEN → **fix applied to `docs/index.html`** | **High** | Wording corrected |
+| 53-WC-07 | **Coordinates** | **Live site publishes `org.junify:junify-db`** — real coordinates are `org.junify.db:junify-db-core` (pom.xml) | OPEN → **fix applied to `docs/index.html`** | **Critical** | Corrected; copy-paste snippet now resolves |
+| 53-WC-08 | Deployment | Site deploys from `kael-tombo.github.io/JunifyDB` while the repo is `armand-ratombotiana/JunifyDB`; README links to neither | OPEN (documented) | Medium | Pages deployment origin is an account-setting decision; flagged for owner |
+| 53-WC-09 | Terminology | Site "Redis structures" vs docs "KV list/set/hash" | PASS (acceptable synonym) | Low | none |
+| 53-WC-10 | States | Console empty/error/loading states verified in browser (docs 37/38); site is static marketing | PASS | Low | none |
+
+## Deployment caveat (honest scope)
+Fixes 53-WC-04..07 are applied to the **site source in this repo**
+(`docs/index.html`) and will reach the live URL only when GitHub Pages
+redeploys from `main`. Until then the live site remains misrepresenting —
+**this is the one brand/claims item that outlives this commit** and is carried
+into the blocker register (55) as *mitigated in source, pending redeploy*.
+
+## Validation Performed
+- Live fetch of the deployed site (read_url, 2026-09-21): claim strings quoted verbatim.
+- Local `docs/index.html` grep counts: `ANSI SQL` ×10, `15ms` ×5, `tamper-evident` ×1, `org.junify:` ×1 — re-counted after fix.
+- Console: live browser pass on the running preview (Overview, Collections, Audit Trail; all API 200).
+
+## Final Assessment
+**CONDITIONAL PASS** — console side fully aligned and verified in-browser;
+site source corrected, live redeploy pending (owner-side Pages action).

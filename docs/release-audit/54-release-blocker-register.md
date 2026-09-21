@@ -30,3 +30,11 @@ MC-01/MC-02 (source/javadoc/GPG plugins + verified staging) — documented path 
 
 ## Final Status
 **CONDITIONAL PASS** (GitHub-first GO path clear; Central gated)
+
+## 2026-09-21 final validation round
+| ID | Finding | Status | Disposition |
+|---|---|---|---|
+| RB-20 | Live website (Pages) shows false claims + wrong coordinates; fixed in docs/index.html | MITIGATED in source | BLOCKS live-site claim only until Pages redeploy; product release otherwise GO (doc 62) |
+| RB-21 | Pages deployed from kael-tombo account vs armand-ratombotiana repo | OPEN (owner) | Account-level setting; flagged 53-WC-08 |
+| RB-22 | Published core jar 6.9 MB exceeded 5 MB requirement (bundled byte-buddy) | **FIXED** | SZ-06: excluded; measured 2.89 MB; CI size gate added |
+| RB-23 | Console used off-brand blue/indigo identity vs yellow site | **FIXED** | Amber rebrand, browser-verified (52-BR-01..05) |

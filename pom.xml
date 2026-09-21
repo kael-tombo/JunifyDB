@@ -66,6 +66,16 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
+            <exclusions>
+                <!-- byte-buddy is a jackson-databind 2.17 transitive but is not
+                     needed for the Jackson features this project uses, and nothing
+                     in this codebase imports it. Excluded for footprint.
+                     Verified by full-suite green run (audit SZ-06). -->
+                <exclusion>
+                    <groupId>net.bytebuddy</groupId>
+                    <artifactId>byte-buddy</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

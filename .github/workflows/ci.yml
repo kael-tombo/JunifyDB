@@ -43,6 +43,19 @@ jobs:
           name: test-results-java-${{ matrix.java }}
           path: target/surefire-reports/
 
+      # Size gate (release audit doc 02): the published core jar must stay
+      # under the approved 5 MB lightweight-embedded limit.
+      - name: Enforce core jar size limit (5 MB)
+        if: matrix.java == '21'
+        run: |
+          SIZE=$(stat -c %s target/junify-db-core-1.0.0.jar)
+          LIMIT=$((5 * 1024 * 1024))
+          echo "core jar: ${SIZE} bytes (limit ${LIMIT})"
+          if [ "$SIZE" -gt "$LIMIT" ]; then
+            echo "::error::Core jar ${SIZE} bytes exceeds the 5 MB limit (doc 02-size-and-footprint-audit)."
+            exit 1
+          fi
+
   # Framework starters and CLI live as separate Maven builds; verify them so the
   # "supported integrations" claim stays CI-tested (release audit CI-04).
   integrations:
