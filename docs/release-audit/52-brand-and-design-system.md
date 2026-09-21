@@ -37,6 +37,7 @@ surfaces on the site, dark neutral text, one mascot (Volt), one logo.**
 | 52-BR-03 | `favicon.svg` + `logo.svg` → canonical Volt bolt on amber, single-source with site mark | SVG contents (commented) |
 | 52-BR-04 | Login gradient, focus ring → amber family | login.html diff |
 | 52-BR-05 | Off-brand hex scan across static assets → zero remaining matches for `6366f1/8b5cf6/a855f7/4338ca/38bdf8/0ea5e9` | grep evidence in transcript |
+| 52-BR-06 | **Canonical mark replaced (2026-09-21, owner-supplied)**: navy rounded-square with amber Java-coffee database + SQL-grid and NoSQL-brace connectors. Applied to: console `/logo.svg` (256px raster embed; endpoints kept for test compatibility) + `/favicon.svg` (64px embed) + login page; website nav, hero, footer, PNG favicons (`assets/favicon-64/256.png`); README banner (`docs/assets/junifydb-banner.png`, 2172×724); live site republished to gh-pages (`6ec890f`). Supersedes the interim Volt bolt as mascot/wordmark companion; Volt references removed from site (0 grep matches) | Screenshot evidence in transcript; live URLs |
 
 ## Design-token contract (going forward)
 - Buttons: amber fill `#fbbf24`, hover `#f59e0b`, text `#0f1117` (11.3:1 on amber-400).
