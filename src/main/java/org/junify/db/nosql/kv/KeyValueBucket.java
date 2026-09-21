@@ -193,7 +193,7 @@ public class KeyValueBucket {
                     engine.delete(name, key);
                 }
             }
-            throw new RuntimeException("Batch put failed: " + e.getMessage(), e);
+            throw new org.junify.db.core.exception.StorageException("Batch put failed: " + e.getMessage(), e);
         }
     }
 

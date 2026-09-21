@@ -67,7 +67,7 @@ public class LSMTreeEngine implements StorageEngine {
             recoverFromWal();
             this.wal = new WriteAheadLog(dataDir);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to initialize LSM-Tree", e);
+            throw new org.junify.db.core.exception.StorageException("Failed to initialize LSM-Tree", e);
         }
 
         scheduler.scheduleAtFixedRate(this::maybeFlush, 1000, 1000, TimeUnit.MILLISECONDS);

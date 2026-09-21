@@ -42,7 +42,7 @@ public class EncryptionService {
 
             return Base64.getEncoder().encodeToString(combined);
         } catch (Exception e) {
-            throw new RuntimeException("Encryption failed", e);
+            throw new org.junify.db.core.exception.JunifyDBException("Encryption failed", e);
         }
     }
 
@@ -62,7 +62,7 @@ public class EncryptionService {
             var plaintext = cipher.doFinal(ciphertext);
             return new String(plaintext);
         } catch (Exception e) {
-            throw new RuntimeException("Decryption failed", e);
+            throw new org.junify.db.core.exception.JunifyDBException("Decryption failed", e);
         }
     }
 

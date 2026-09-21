@@ -208,7 +208,7 @@ public class DocumentCollection {
                     }
                 }
             }
-            throw new RuntimeException("Batch insert failed: " + e.getMessage(), e);
+            throw new org.junify.db.core.exception.StorageException("Batch insert failed: " + e.getMessage(), e);
         }
     }
 
@@ -337,6 +337,25 @@ public class DocumentCollection {
 
     private List<Document> findWithIndex(Query query) {
         var pred = query.docPredicate();
+
+        // Point lookup when the query is a simple equality on an indexed field
+        // (audit R-18 / 12-IX-01): jump straight to the matching ids instead of
+        // walking the entire index. Falls back to the full-index walk for
+        // composite queries that merely *contain* an equality term.
+        if (query.getIndexedField() != null && query.getIndexedValue() != null) {
+            var idx = indexes.get(query.getIndexedField());
+            if (idx != null) {
+                var results = new ArrayList<Document>();
+                for (var id : idx.lookup(query.getIndexedValue())) {
+                    var doc = findById(id);
+                    if (doc != null && pred.test(doc)) {
+                        results.add(doc);
+                    }
+                }
+                return results;
+            }
+        }
+
         for (var entry : indexes.entrySet()) {
             var idx = entry.getValue();
             var results = new ArrayList<Document>();

@@ -155,11 +155,51 @@ public class Transaction implements AutoCloseable {
         }
 
         if (mvccOk) {
-            for (var op : operations) {
-                switch (op.type()) {
-                    case PUT -> engine.put(op.collection(), op.key(), op.value());
-                    case DELETE -> engine.delete(op.collection(), op.key());
+            // Apply with an undo log (audit R-20 / 13-T-02): capture prior state
+            // before each mutation so a mid-apply engine failure can be undone
+            // instead of leaving a silent partial commit. Undo runs in reverse
+            // apply order; undo failures are logged, never thrown (best effort),
+            // and the original failure is always rethrown to the caller.
+            record Undo(boolean wasPut, String collection, String key, String priorValue) { }
+            var undoLog = new ArrayList<Undo>(operations.size());
+            try {
+                for (var op : operations) {
+                    switch (op.type()) {
+                        case PUT -> {
+                            undoLog.add(new Undo(true, op.collection(), op.key(), engine.get(op.collection(), op.key())));
+                            engine.put(op.collection(), op.key(), op.value());
+                        }
+                        case DELETE -> {
+                            undoLog.add(new Undo(false, op.collection(), op.key(), engine.get(op.collection(), op.key())));
+                            engine.delete(op.collection(), op.key());
+                        }
+                    }
                 }
+            } catch (RuntimeException e) {
+                // Undoing the failed op's own entry is always harmless: if the
+                // mutation never happened, the undo restores the captured prior
+                // state (a no-op or re-put of the existing value).
+                for (int i = undoLog.size() - 1; i >= 0; i--) {
+                    var u = undoLog.get(i);
+                    try {
+                        if (u.wasPut()) {
+                            if (u.priorValue() != null) engine.put(u.collection(), u.key(), u.priorValue());
+                            else engine.delete(u.collection(), u.key());
+                        } else {
+                            if (u.priorValue() != null) engine.put(u.collection(), u.key(), u.priorValue());
+                            // deleting a key that was already absent: nothing to undo
+                        }
+                    } catch (RuntimeException undoFailure) {
+                        System.err.println("[Transaction] undo failed for " + u.collection() + "/" + u.key()
+                                + ": " + undoFailure.getMessage());
+                    }
+
+                }
+                status = Status.ROLLED_BACK;
+                metrics.recordTransactionRollback();
+                eventBus.emit(EventBus.EventType.AFTER_ROLLBACK, id);
+                throw new org.junify.db.core.exception.StorageException(
+                        "Transaction " + id + " failed during apply; partial effects rolled back", e);
             }
         }
 

@@ -197,7 +197,7 @@ public class EntityMapper {
 
             return entity;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to map document to entity: " + clazz.getName(), e);
+            throw new org.junify.db.core.exception.SerializationException("Failed to map document to entity: " + clazz.getName(), e);
         }
     }
 

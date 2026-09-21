@@ -22,7 +22,7 @@ public final class JsonSerde {
         try {
             return MAPPER.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to serialize to JSON", e);
+            throw new org.junify.db.core.exception.SerializationException("Failed to serialize to JSON", e);
         }
     }
 
@@ -55,7 +55,7 @@ public final class JsonSerde {
             }
             return MAPPER.readValue(json, type);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to deserialize from JSON: " + json, e);
+            throw new org.junify.db.core.exception.SerializationException("Failed to deserialize from JSON: " + json, e);
         }
     }
 

@@ -45,7 +45,7 @@ public class FileEngine implements StorageEngine {
         try {
             this.wal = new WriteAheadLog(dataDir);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to initialize WAL", e);
+            throw new org.junify.db.core.exception.StorageException("Failed to initialize WAL", e);
         }
         
         if (asyncEnabled) {
@@ -63,7 +63,7 @@ public class FileEngine implements StorageEngine {
             replayWal();
             recordPersistedCollections();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to initialize file engine", e);
+            throw new org.junify.db.core.exception.StorageException("Failed to initialize file engine", e);
         }
     }
 
@@ -227,7 +227,7 @@ public class FileEngine implements StorageEngine {
                 Files.move(tmp, target, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to flush: " + collection, e);
+            throw new org.junify.db.core.exception.StorageException("Failed to flush: " + collection, e);
         }
     }
 

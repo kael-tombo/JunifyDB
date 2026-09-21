@@ -1,20 +1,29 @@
-﻿package org.junify.db.integration.standalone;
+package org.junify.db.integration.standalone;
 
 import org.junify.db.JunifyDB;
 import org.junify.db.config.JunifyDBConfig;
-import org.junify.db.document.Document;
-import org.junify.db.document.DocumentCollection;
-import org.junify.db.document.Query;
+import org.junify.db.nosql.document.Document;
+import org.junify.db.nosql.document.DocumentCollection;
+import org.junify.db.nosql.document.Query;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.Duration;
+import java.nio.file.Paths;
 
+/**
+ * Interactive developer shell for a local JunifyDB instance.
+ *
+ * <p>Recovered from the orphaned pre-audit {@code cli/} directory (audit R-25):
+ * package corrected to match its path, imports fixed to the real API surface,
+ * and a proper entry point added. Commands: help, use, insert, find, count,
+ * stats, exit.
+ */
 public class JunifyDBShell {
 
     private final JunifyDB db;
     private final BufferedReader reader;
+    private String currentCollection = "default";
 
     public JunifyDBShell(JunifyDB db) {
         this.db = db;
@@ -22,33 +31,32 @@ public class JunifyDBShell {
     }
 
     public void start() throws IOException {
-        System.out.println("junify-EMBED Shell v1.0");
+        System.out.println("JunifyDB Shell v1.0");
         System.out.println("Type 'help' for commands, 'exit' to quit");
 
         while (true) {
-            System.out.print("JUNIFYDB> ");
+            System.out.print("JUNIFYDB:" + currentCollection + "> ");
+            System.out.flush();
             String line = reader.readLine();
             if (line == null) break; // EOF
 
             line = line.trim();
             if (line.isEmpty()) continue;
 
-            if (line.equalsIgnoreCase("exit")) {
+            if (line.equalsIgnoreCase("exit") || line.equalsIgnoreCase("quit")) {
                 break;
             } else if (line.equalsIgnoreCase("help")) {
                 printHelp();
             } else if (line.startsWith("use ")) {
-                useDatabase(line.substring(4).trim());
+                useCollection(line.substring(4).trim());
             } else if (line.startsWith("insert ")) {
                 insertDocument(line.substring(7).trim());
             } else if (line.startsWith("find ")) {
                 findDocuments(line.substring(5).trim());
-            } else if (line.startsWith("count")) {
+            } else if (line.equalsIgnoreCase("count")) {
                 showCount();
-            } else if (line.startsWith("stats")) {
+            } else if (line.equalsIgnoreCase("stats")) {
                 showStats();
-            } else if (line.startsWith("quit")) {
-                break;
             } else {
                 System.out.println("Unknown command: " + line);
                 System.out.println("Type 'help' for available commands");
@@ -58,24 +66,28 @@ public class JunifyDBShell {
 
     private void printHelp() {
         System.out.println("Available commands:");
-        System.out.println("  help          - Show this help");
-        System.out.println("  use <name>    - Use/create collection");
-        System.out.println("  insert <json> - Insert document (JSON format)");
-        System.out.println("  find <query>  - Find documents");
-        System.out.println("  count         - Show document count");
-        System.out.println("  stats         - Show collection stats");
-        System.out.println("  exit/quit     - Exit shell");
+        System.out.println("  use <name>    - Switch the active collection (creates if absent)");
+        System.out.println("  insert <json> - Insert a document into the active collection");
+        System.out.println("  find <query>  - 'all', 'field=value', or blank for everything");
+        System.out.println("  count         - Document count in the active collection");
+        System.out.println("  stats         - Collection statistics");
+        System.out.println("  exit|quit     - Exit shell");
     }
 
-    private void useDatabase(String collectionName) {
-        DocumentCollection collection = db.documentCollection(collectionName);
+    private void useCollection(String collectionName) {
+        if (collectionName.isEmpty()) {
+            System.out.println("Usage: use <collection>");
+            return;
+        }
+        db.documentCollection(collectionName);
+        currentCollection = collectionName;
         System.out.println("Using collection: " + collectionName);
     }
 
     private void insertDocument(String json) {
         try {
             Document doc = Document.fromJson(json);
-            DocumentCollection collection = db.documentCollection("default");
+            DocumentCollection collection = db.documentCollection(currentCollection);
             Document saved = collection.insert(doc);
             System.out.println("Inserted with id: " + saved.id());
         } catch (Exception e) {
@@ -85,28 +97,29 @@ public class JunifyDBShell {
 
     private void findDocuments(String queryStr) {
         try {
-            DocumentCollection collection = db.documentCollection("default");
+            DocumentCollection collection = db.documentCollection(currentCollection);
             Query query;
-            
+
             if (queryStr.isEmpty() || queryStr.equalsIgnoreCase("all")) {
                 query = Query.all();
-            } else if (queryStr.startsWith("{")) {
-                // Simple JSON query parsing (basic implementation)
-                query = Query.all(); // Would parse JSON in real implementation
             } else {
-                // Treat as key-value for simple search
+                // Treat as a simple field=value equality unless JSON-ish
                 String[] parts = queryStr.split("=", 2);
                 if (parts.length == 2) {
-                    query = Query.eq(parts[0].trim(), parts[1].trim());
+                    String value = parts[1].trim();
+                    if (value.startsWith("\"") && value.endsWith("\"")) {
+                        value = value.substring(1, value.length() - 1);
+                    }
+                    query = Query.eq(parts[0].trim(), value);
                 } else {
                     query = Query.all();
                 }
             }
-            
+
             var results = collection.find(query);
             System.out.println("Found " + results.size() + " documents:");
             for (Document doc : results) {
-                System.out.println("  " + doc);
+                System.out.println("  " + doc.toJson());
             }
         } catch (Exception e) {
             System.out.println("Error executing query: " + e.getMessage());
@@ -114,13 +127,12 @@ public class JunifyDBShell {
     }
 
     private void showCount() {
-        DocumentCollection collection = db.documentCollection("default");
-        long count = collection.count();
-        System.out.println("Document count: " + count);
+        DocumentCollection collection = db.documentCollection(currentCollection);
+        System.out.println("Document count: " + collection.count());
     }
 
     private void showStats() {
-        DocumentCollection collection = db.documentCollection("default");
+        DocumentCollection collection = db.documentCollection(currentCollection);
         var stats = collection.stats();
         System.out.println("Collection stats:");
         for (var entry : stats.entrySet()) {
@@ -129,7 +141,10 @@ public class JunifyDBShell {
     }
 
     public static void main(String[] args) throws IOException {
-        JunifyDB db = JUNIFYDB.embed().build();
+        var dataDir = args.length > 0 ? args[0] : "data";
+        var db = JunifyDB.create(JunifyDBConfig.builder()
+                .persistTo(dataDir)
+                .buildConfig());
         try {
             new JunifyDBShell(db).start();
         } finally {

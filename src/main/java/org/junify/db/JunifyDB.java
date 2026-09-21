@@ -97,7 +97,7 @@ public class JunifyDB implements Closeable {
             }));
             return db;
         } catch (java.io.IOException e) {
-            throw new RuntimeException("Failed to create temporary JunifyDB: " + e.getMessage(), e);
+            throw new org.junify.db.core.exception.StorageException("Failed to create temporary JunifyDB: " + e.getMessage(), e);
         }
     }
 
@@ -120,7 +120,7 @@ public class JunifyDB implements Closeable {
             try {
                 db.startConsoleServer(config.consoleConfig(), config.securityConfig());
             } catch (java.io.IOException e) {
-                throw new RuntimeException("Failed to start JunifyDB console server: " + e.getMessage(), e);
+                throw new org.junify.db.core.exception.StorageException("Failed to start JunifyDB console server: " + e.getMessage(), e);
             }
         }
         return db;

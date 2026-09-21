@@ -33,7 +33,7 @@ public class FileCDCConnector implements AutoCloseable {
         try {
             Files.createDirectories(outputDir);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to create CDC output directory", e);
+            throw new org.junify.db.core.exception.StorageException("Failed to create CDC output directory", e);
         }
     }
 

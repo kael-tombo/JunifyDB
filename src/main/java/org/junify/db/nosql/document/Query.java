@@ -20,6 +20,12 @@ public class Query {
      * to choose an index without scanning live data.
      */
     private String indexedField;
+    /**
+     * The value targeted by that equality predicate (audit R-18 / 12-IX-01):
+     * lets the planner perform a point lookup instead of walking the whole
+     * index. {@code null} when the query has no single equality target.
+     */
+    private Object indexedValue;
 
     private Query(Predicate<Document> docPredicate) {
         this.docPredicate = docPredicate;
@@ -50,6 +56,7 @@ public class Query {
             return v.equals(value);
         });
         q.indexedField = field;
+        q.indexedValue = value;
         return q;
     }
 
@@ -257,6 +264,13 @@ public class Query {
      */
     public String getIndexedField() {
         return indexedField;
+    }
+
+    /**
+     * The equality value for {@link #getIndexedField()}, or {@code null}.
+     */
+    public Object getIndexedValue() {
+        return indexedValue;
     }
 
     public Set<QueryHint> getHints() {

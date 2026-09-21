@@ -17,19 +17,19 @@ Objective, checkboxed verification for the public GitHub release of 1.0.0.
 - [x] README claims verified/bounded/removed (43 verification log)
 - [x] Vision-doc contradiction annotated (02)
 - [x] Honest engine/durability table (16)
-- [ ] ROADMAP refresh (R-23)
-- [ ] demo/README prerequisites (P1-6)
+- [x] ROADMAP refresh (R-23) — done 2026-09-21, round 1
+- [x] demo/README prerequisites (P1-6) — done 2026-09-21, round 1
 - [x] LICENSE/CONTRIBUTING/SECURITY present and consistent
 
 ### Security
 - [x] Bind-host default 127.0.0.1 verified (22)
 - [x] Auth enforcement tests green (22)
 - [x] No secrets in repo (54)
-- [ ] CVE scan job (P2-4)
+- [x] CVE scan job (P2-4) — done 2026-09-21, round 1 (OWASP dependency-check, failBuildOnCVSS=9)
 
 ### Release Mechanics
 - [x] Repo litter removed ($null/server.*)
-- [ ] `mvnw` shell script (P1-3)
+- [x] `mvnw` shell script (P1-3) — done 2026-09-21, round 1 (smoke-tested; CI dogfoods it)
 - [ ] GitHub Release draft: tag `v1.0.0`, attach shaded jar, link audit docs
 - [x] Recommended version: **1.0.0** (47-VER-02)
 - [ ] Maven Central: blocked until 46 items (P2-1) — GitHub-first release is valid without it
@@ -41,4 +41,4 @@ Objective, checkboxed verification for the public GitHub release of 1.0.0.
 - [ ] README screenshots (39-WS-03)
 
 ## Final Status
-**PASS** — all P0 pre-tag items closed. The remaining open boxes (Playwright UI suite, `mvnw`, ROADMAP refresh, demo/README commands, CVE scan, screenshots, GitHub Release mechanics) are P1/P2 post-release improvements per `59-prioritized-fix-roadmap.md` and do not gate tagging `v1.0.0`.
+**PASS** — all P0 pre-tag items closed. The remaining open boxes (Playwright UI suite, README screenshots, GitHub Release mechanics, Maven Central staging) are P1/P2 post-release items per `59-prioritized-fix-roadmap.md` and do not gate tagging `v1.0.0`. Improvement rounds 1–2 closed every engine/CI/docs item; see 62 and 63 for evidence.

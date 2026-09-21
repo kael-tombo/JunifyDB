@@ -120,38 +120,57 @@ public final class MVCCManager {
      *         {@code readTimestamp}), in which case nothing is applied and the
      *         caller must roll back
      */
+    /**
+     * Serializes validate+apply so a commit is all-or-nothing (audit R-20 /
+     * 13-T-02). Without this lock, two transactions could both pass phase-1
+     * validation and interleave their applies, letting the later applier
+     * silently overwrite the earlier one (check-then-act race).
+     */
+    private final Object commitLock = new Object();
+
     public boolean commit(String txId, long commitTs, long readTimestamp) {
         var buffer = txWrites.remove(txId);
         if (buffer == null) return true;
 
-        // Phase 1 — validate the whole write set before applying anything.
-        // First-writer-wins: if another transaction committed a newer version of
-        // a key in our write set after our snapshot, reject the commit and leave
-        // the version store untouched. Callers must roll back and retry.
-        for (var key : buffer.writes.keySet()) {
-            var chain = versionStore.get(key);
-            if (chain != null && chain.head != null && chain.head.commitTs > readTimestamp) {
-                return false;
+        synchronized (commitLock) {
+            // Phase 1 — validate the whole write set before applying anything.
+            // First-writer-wins: if another transaction committed a newer version of
+            // a key in our write set after our snapshot, reject the commit and leave
+            // the version store untouched. Callers must roll back and retry.
+            // Deletes are validated too: deleting a key someone else updated after
+            // our snapshot is a delete-write conflict (same first-committer rule).
+            for (var key : buffer.writes.keySet()) {
+                var chain = versionStore.get(key);
+                if (chain != null && chain.head != null && chain.head.commitTs > readTimestamp) {
+                    return false;
+                }
             }
-        }
+            for (var key : buffer.deletes) {
+                var chain = versionStore.get(key);
+                if (chain != null && chain.head != null && chain.head.commitTs > readTimestamp) {
+                    return false;
+                }
+            }
 
-        // Phase 2 — apply. New versions are prepended to each key's chain
-        // (versionStore is a ConcurrentHashMap; chain prepends are immutable).
-        for (var entry : buffer.writes.entrySet()) {
-            var key = entry.getKey();
-            var record = entry.getValue();
-            var chain = versionStore.get(key);
+            // Phase 2 — apply. New versions are prepended to each key's chain
+            // (versionStore is a ConcurrentHashMap; chain prepends are immutable).
+            // Under commitLock this section cannot interleave with another commit.
+            for (var entry : buffer.writes.entrySet()) {
+                var key = entry.getKey();
+                var record = entry.getValue();
+                var chain = versionStore.get(key);
 
-            var metadata = record.metadata().nextVersion(txId);
-            var versionedRecord = record.withMetadata(metadata);
+                var metadata = record.metadata().nextVersion(txId);
+                var versionedRecord = record.withMetadata(metadata);
 
-            var newChain = new VersionChain(new VersionNode(versionedRecord, commitTs, chain != null ? chain.head : null));
-            versionStore.put(key, newChain);
-        }
+                var newChain = new VersionChain(new VersionNode(versionedRecord, commitTs, chain != null ? chain.head : null));
+                versionStore.put(key, newChain);
+            }
 
-        // Apply deletes
-        for (var key : buffer.deletes) {
-            versionStore.remove(key);
+            // Apply deletes
+            for (var key : buffer.deletes) {
+                versionStore.remove(key);
+            }
         }
         return true;
     }

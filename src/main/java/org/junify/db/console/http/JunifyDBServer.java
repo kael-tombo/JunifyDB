@@ -208,8 +208,44 @@ public class JunifyDBServer {
                 auditLog.pollFirst();
             }
         }
+        appendAuditToDisk(event);
         logger.info("[AUDIT] {} {} {} - {} - {} - {}", operation, resource,
                     documentId != null ? documentId : "", status, clientIp, details);
+    }
+
+    /**
+     * Appends an audit event to {@code <dataDir>/audit.log} as JSONL when the
+     * underlying engine persists to disk (audit R-24 / 22-SEC-03). The ring
+     * buffer remains the fast in-memory view; the file survives restarts.
+     *
+     * <p>Fail-open by design: an audit write failure is logged but never
+     * blocks the data operation being audited. A single shared writer keeps
+     * appends serialized; the file is flushed per event but not fsynced —
+     * audit is evidentiary, not a durability mechanism.
+     */
+    private java.io.BufferedWriter auditWriter;
+    private java.nio.file.Path auditFile;
+
+    private void appendAuditToDisk(AuditEvent event) {
+        String dataDir;
+        try {
+            dataDir = db.config().dataDir() != null ? db.config().dataDir().toString() : null;
+        } catch (Exception e) {
+            dataDir = null;
+        }
+        if (dataDir == null || db.config().storageEngine() == org.junify.db.config.JunifyDBConfig.StorageEngineType.IN_MEMORY) return;
+        try {
+            if (auditWriter == null) {
+                auditFile = java.nio.file.Path.of(dataDir, "audit.log");
+                java.nio.file.Files.createDirectories(auditFile.getParent());
+                auditWriter = new java.io.BufferedWriter(new java.io.FileWriter(auditFile.toFile(), true));
+            }
+            auditWriter.write(JsonSerde.toJson(event));
+            auditWriter.newLine();
+            auditWriter.flush();
+        } catch (Exception e) {
+            System.err.println("[AUDIT] disk append failed (continuing): " + e.getMessage());
+        }
     }
 
     private void logCrudEvent(String operation, String collection, String documentId, String clientIp) {
@@ -673,6 +709,16 @@ public class JunifyDBServer {
         }
         if (executorService != null) {
             executorService.shutdownNow();
+        }
+        if (auditWriter != null) {
+            try {
+                auditWriter.flush();
+                auditWriter.close();
+            } catch (Exception e) {
+                System.err.println("[AUDIT] failed to close audit writer: " + e.getMessage());
+            } finally {
+                auditWriter = null;
+            }
         }
     }
 
@@ -2280,17 +2326,51 @@ public class JunifyDBServer {
                 return;
             }
             var indexName = parts[3];
-            var hnsw = vectorIndexes.computeIfAbsent(indexName, k -> new org.junify.db.index.hnsw.HNSWIndex(128));
+            var hnsw = vectorIndexes.get(indexName);
             
             var id = parts[4];
+
+            // The request body can only be read once. Read it here for all POST
+            // paths so index creation (which needs the vector) and the operation
+            // itself can share it.
+            Map<String, Object> bodyData = null;
+            if ("POST".equals(exchange.getRequestMethod()) || "PUT".equals(exchange.getRequestMethod())) {
+                try {
+                    var raw = readBody(exchange);
+                    if (raw != null && !raw.isBlank()) {
+                        bodyData = JsonSerde.fromJson(raw, Map.class);
+                    }
+                } catch (Exception e) {
+                    sendJson(exchange, 400, Map.of("error", "Invalid JSON body", "message", e.getMessage()));
+                    return;
+                }
+            }
+
+            // Create-on-first-use with client-derived dimensions (audit R-19 /
+            // 12-IX-02): the first add/search on an index fixes its dimensionality
+            // from the vector the client actually sends (or an explicit "dims"
+            // body field), instead of a hardcoded 128 that rejects every other
+            // embedding size.
+            if (hnsw == null) {
+                if (bodyData == null) {
+                    sendJson(exchange, 404, Map.of("error", "Vector index not found", "index", indexName));
+                    return;
+                }
+                int dims = bodyData.containsKey("dims") ? ((Number) bodyData.get("dims")).intValue()
+                        : (bodyData.get("vector") instanceof java.util.List<?> v ? v.size() : 0);
+                if (dims <= 0) {
+                    sendJson(exchange, 400, Map.of("error",
+                            "New vector index \"" + indexName + "\" requires a vector or a \"dims\" field to fix dimensionality"));
+                    return;
+                }
+                hnsw = vectorIndexes.computeIfAbsent(indexName, k -> new org.junify.db.index.hnsw.HNSWIndex(dims));
+            }
 
             // /api/vectors/{index}/search — POST search
             if ("search".equals(id) && "POST".equals(exchange.getRequestMethod())) {
                 try {
-                    var body = readBody(exchange);
-                    var data = JsonSerde.fromJson(body, Map.class);
-                    var vector = parseVector((java.util.List<?>) data.get("vector"));
-                    var k = data.containsKey("k") ? ((Number) data.get("k")).intValue() : 5;
+                    var vector = parseVector((java.util.List<?>) bodyData.get("vector"));
+                    var k = bodyData.containsKey("k") ? ((Number) bodyData.get("k")).intValue() : 5;
                     var results = hnsw.search(vector, k);
                     sendJson(exchange, 200, Map.of("results", results, "k", k));
                 } catch (Exception e) {
@@ -2309,11 +2389,9 @@ public class JunifyDBServer {
                 sendJson(exchange, 200, Map.of("id", id, "index", indexName, "size", hnsw.size(), "dimensions", hnsw.dimensions()));
             } else if ("POST".equals(exchange.getRequestMethod())) {
                 try {
-                    var body = readBody(exchange);
-                    var data = JsonSerde.fromJson(body, Map.class);
                     // Support {id, vector, metadata} or just {vector}
-                    String vecId = data.containsKey("id") ? data.get("id").toString() : id;
-                    var vector = parseVector((java.util.List<?>) data.get("vector"));
+                    String vecId = bodyData.containsKey("id") ? bodyData.get("id").toString() : id;
+                    var vector = parseVector((java.util.List<?>) bodyData.get("vector"));
                     hnsw.add(vecId, vector);
                     sendJson(exchange, 201, Map.of("id", vecId, "status", "added"));
                 } catch (Exception e) {

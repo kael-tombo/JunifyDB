@@ -40,7 +40,7 @@ public class BTreeEngine implements StorageEngine {
             Files.createDirectories(indexDir);
             loadIndex();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to initialize B-Tree engine", e);
+            throw new org.junify.db.core.exception.StorageException("Failed to initialize B-Tree engine", e);
         }
     }
 
