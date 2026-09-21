@@ -199,13 +199,7 @@ public class FileEngine implements StorageEngine {
         
         writer.execute(() -> {
             for (var entry : store.entrySet()) {
-                try {
-                    var file = dataDir.resolve(entry.getKey() + ".json");
-                    var json = JsonSerde.toJson(entry.getValue());
-                    Files.writeString(file, json);
-                } catch (IOException e) {
-                    System.err.println("Failed to flush: " + entry.getKey());
-                }
+                writeSnapshotAtomically(entry.getKey(), entry.getValue());
             }
         });
     }
@@ -213,13 +207,27 @@ public class FileEngine implements StorageEngine {
     private synchronized void syncFlush() {
         recordPersistedCollections();
         for (var entry : store.entrySet()) {
+            writeSnapshotAtomically(entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * Writes a collection snapshot via {@code tmp file + atomic move}, so a crash
+     * mid-flush can never leave a torn {@code <collection>.json} behind: readers
+     * either see the previous complete snapshot or the new one.
+     */
+    private void writeSnapshotAtomically(String collection, ConcurrentMap<String, String> data) {
+        var target = dataDir.resolve(collection + ".json");
+        var tmp = dataDir.resolve(collection + ".json.tmp");
+        try {
+            Files.writeString(tmp, JsonSerde.toJson(data));
             try {
-                var file = dataDir.resolve(entry.getKey() + ".json");
-                var json = JsonSerde.toJson(entry.getValue());
-                Files.writeString(file, json);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to flush: " + entry.getKey(), e);
+                Files.move(tmp, target, java.nio.file.StandardCopyOption.ATOMIC_MOVE, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            } catch (java.nio.file.AtomicMoveNotSupportedException unsupported) {
+                Files.move(tmp, target, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to flush: " + collection, e);
         }
     }
 
@@ -279,10 +287,33 @@ public class FileEngine implements StorageEngine {
                             var map = JsonSerde.fromJson(content, ConcurrentHashMap.class);
                             var name = file.getFileName().toString().replace(".json", "");
                             store.put(name, new ConcurrentHashMap<>(map));
-                        } catch (IOException e) {
-                            throw new RuntimeException("Failed to load: " + file, e);
+                        } catch (Exception e) {
+                            // A single corrupt snapshot must not prevent startup:
+                            // quarantine it and continue. WAL replay (below) may still
+                            // recover the newest writes for that collection.
+                            quarantine(file, e);
                         }
                     });
+        }
+    }
+
+    /**
+     * Moves an unreadable snapshot file into {@code .quarantine/} inside the data
+     * directory and logs the reason, so one corrupt file no longer blocks the
+     * whole database from opening (audit finding 18-F-02 / R-21).
+     */
+    private void quarantine(Path file, Exception cause) {
+        try {
+            var quarantineDir = dataDir.resolve(".quarantine");
+            Files.createDirectories(quarantineDir);
+            var stamp = System.currentTimeMillis();
+            var target = quarantineDir.resolve(file.getFileName() + "." + stamp + ".corrupt");
+            Files.move(file, target);
+            System.err.println("FileEngine: quarantined corrupt snapshot " + file.getFileName()
+                    + " -> " + quarantineDir.resolve(file.getFileName() + "." + stamp + ".corrupt")
+                    + " (" + cause.getMessage() + ")");
+        } catch (IOException moveFailure) {
+            System.err.println("FileEngine: failed to quarantine " + file + ": " + moveFailure.getMessage());
         }
     }
 

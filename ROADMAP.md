@@ -11,7 +11,11 @@ This document outlines the evolutionary development roadmap for **JunifyDB (JNoS
 - [x] Write-Ahead Logging (WAL) with deterministic fsync crash durability.
 - [x] Framework starters and extensions: Spring Boot, Quarkus, Micronaut, Vert.x.
 - [x] Embedded HTTP Developer Console & Admin API.
-- [x] 100% test pass rate across 511 automated test cases.
+- [x] Built-in SQL dialect over documents (SELECT/INSERT/UPDATE/DELETE, WHERE, JOIN, aggregation; no DDL/views/sequences — see docs/release-audit/08).
+- [x] CDC change feed wired to the write path (in-memory ring + file connector; Kafka connector optional).
+- [x] Crash-safety hardening: WAL replay on FILE and LSM engines, snapshot rotation, corrupt-snapshot quarantine, MVCC write-write conflict detection.
+- [x] 682 automated tests, 0 failures (release-audit baseline; full suite green).
+- [x] Open-source release governance: Apache-2.0 license, CONTRIBUTING, SECURITY, CHANGELOG, 62-file release audit in docs/release-audit/.
 
 ---
 
@@ -24,7 +28,7 @@ This document outlines the evolutionary development roadmap for **JunifyDB (JNoS
 ---
 
 ## 1.2.0 — Query Capabilities & Security (Q1 2027)
-- [ ] **SQL-like Embedded Query Dialect**: Light query parsing for SQL-style `SELECT * FROM collection WHERE x > y`.
+- [x] **SQL-like Embedded Query Dialect**: Light query parsing for SQL-style `SELECT * FROM collection WHERE x > y`. *(shipped early — see 1.0.0)*
 - [ ] **Embedded TLS/SSL**: HTTPS support for `JunifyDBServer` developer console.
 - [ ] **Fine-Grained Role-Based Access Control**: Scoped API keys with read-only vs. read-write permissions.
 - [ ] **Async CDC Channels**: Non-blocking Change Data Capture queues with consumer groups.

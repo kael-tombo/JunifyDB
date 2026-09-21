@@ -374,10 +374,16 @@ public class JunifyDBServer {
 
     private void addCorsHeaders(HttpExchange exchange) {
         if (corsEnabled) {
-            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", allowedOrigins != null ? allowedOrigins : "*");
+            boolean wildcard = allowedOrigins == null || "*".equals(allowedOrigins);
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", wildcard ? "*" : allowedOrigins);
             exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
             exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type, X-API-Key, Authorization, Cookie, X-CSRF-Token");
-            exchange.getResponseHeaders().set("Access-Control-Allow-Credentials", "true");
+            // Credential-bearing CORS requires an explicit origin: browsers reject
+            // the wildcard + credentials combination, so only send it when a
+            // concrete allowlist is configured.
+            if (!wildcard) {
+                exchange.getResponseHeaders().set("Access-Control-Allow-Credentials", "true");
+            }
         }
     }
 

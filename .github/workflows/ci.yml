@@ -24,8 +24,10 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
 
-      - name: Build and Test
-        run: mvn -B clean verify
+      - name: Build and Test (with 70% coverage gate)
+        # -Pcoverage-check enforces the JaCoCo line-coverage gate (70%).
+        # Measured 2026-09: 73.6% line coverage on the full suite.
+        run: ./mvnw -B clean verify -Pcoverage-check
 
       - name: Upload Coverage
         if: matrix.java == '21'
@@ -41,8 +43,97 @@ jobs:
           name: test-results-java-${{ matrix.java }}
           path: target/surefire-reports/
 
-  # NOTE (release audit): Docker image job removed — no Dockerfile exists in the
-  # repository. Re-add alongside a Dockerfile if/when an official image is published.
+  # Framework starters and CLI live as separate Maven builds; verify them so the
+  # "supported integrations" claim stays CI-tested (release audit CI-04).
+  integrations:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: maven
+
+      - name: Install core
+        run: ./mvnw -B clean install -DskipTests
+
+      - name: Verify starter and CLI modules
+        # Note: cli/ is an unfinished orphan module (no pom, stale package path)
+        # and is deliberately NOT in CI — see release-audit 53 (R-24).
+        run: |
+          for module in spring-boot-starter quarkus-extension micronaut-integration; do
+            echo "::group::Verify $module"
+            (cd "$module" && mvn -B verify) || exit 1
+            echo "::endgroup::"
+          done
+
+  # Supply-chain guard: fail on CVSS >= 9 findings (P2-4). Reports for the rest.
+  deps-scan:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: maven
+
+      - name: OWASP Dependency-Check (fail on Critical)
+        run: >
+          mvn -B org.owasp:dependency-check-maven:10.0.4:check
+          -DfailBuildOnCVSS=9
+          -DfailOnError=false
+
+      - name: Upload Scan Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: target/dependency-check-report.html
+
+  # Demo smoke: the demo suite is the executable proof of the framework-integration
+  # claims (release audit CI-04 / docs 35). Runs on pushes to main; core is installed
+  # from the same commit the demos run against.
+  demos:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: maven
+
+      - name: Install core and demo-common
+        run: |
+          ./mvnw -B clean install -DskipTests
+          (cd demo/demo-common && mvn -B install -DskipTests)
+
+      - name: Run all demo test suites
+        run: |
+          for d in spring-boot-demo quarkus-demo micronaut-demo vertx-demo \
+                   end-to-end-validation advanced-queries-demo \
+                   annotation-showcase-demo batch-processing-demo \
+                   load-and-stress-demo; do
+            echo "::group::Demo $d"
+            (cd "demo/$d" && mvn -B clean test) || exit 1
+            echo "::endgroup::"
+          done
 
   benchmark:
     needs: build

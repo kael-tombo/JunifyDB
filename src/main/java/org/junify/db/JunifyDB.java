@@ -52,6 +52,14 @@ public class JunifyDB implements Closeable {
         this.eventBus = new EventBus();
         this.metrics = new DatabaseMetrics();
         this.cdcManager = new CDCManager();
+        // Feed document change events into CDC so the change feed has a real
+        // producer (previously the CDC subsystem had no write-path wiring).
+        var cdcListener = cdcManager.changeListener();
+        // System-listener channel: survives user `eventBus.clear()` and keeps
+        // internal subsystems out of user-visible listener counts.
+        this.eventBus.onSystem(EventBus.EventType.AFTER_INSERT, cdcListener);
+        this.eventBus.onSystem(EventBus.EventType.AFTER_UPDATE, cdcListener);
+        this.eventBus.onSystem(EventBus.EventType.AFTER_DELETE, cdcListener);
         this.sqlEngine = new org.junify.db.sql.engine.SqlEngine(this);
         this.closed = false;
     }

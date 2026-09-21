@@ -91,8 +91,20 @@ public class WriteAheadLog {
     /**
      * Log a write operation with fsync for durability guarantee.
      */
+    /** Records larger than this are rejected: a single oversized record can
+     *  otherwise exhaust memory and take the whole engine down. */
+    public static final int MAX_RECORD_BYTES = 64 * 1024 * 1024;
+
     public synchronized void log(String type, String collection, String key, String value) {
         if (closed.get()) return;
+
+        int recordBytes = (type.length() + collection.length() + key.length()
+                + (value == null ? 0 : value.length())) * 2 + 128;
+        if (recordBytes > MAX_RECORD_BYTES) {
+            throw new IllegalArgumentException(
+                "WAL record exceeds " + MAX_RECORD_BYTES + " bytes (got ~" + recordBytes
+                + "); split the value or use a bulk/streaming strategy.");
+        }
 
         var entry = new LogEntry(
             logSequence.incrementAndGet(),

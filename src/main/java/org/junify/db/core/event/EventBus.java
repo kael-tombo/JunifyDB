@@ -20,6 +20,14 @@ public class EventBus {
 
     private final List<Consumer<Event>> listeners = new CopyOnWriteArrayList<>();
 
+    /**
+     * Internal subsystem listeners (e.g. CDC change feed). Kept separate from
+     * user listeners so that {@link #clear()} and {@link #listenerCount()}
+     * only reflect user-registered handlers and user code cannot accidentally
+     * detach internal subsystems.
+     */
+    private final List<Consumer<Event>> systemListeners = new CopyOnWriteArrayList<>();
+
     public void on(EventType type, Consumer<Event> handler) {
         listeners.add(event -> {
             if (event.type() == type) {
@@ -28,8 +36,26 @@ public class EventBus {
         });
     }
 
+    /**
+     * Registers an internal subsystem listener. System listeners always run
+     * (before user listeners) and are not affected by {@link #clear()}.
+     */
+    public void onSystem(EventType type, Consumer<Event> handler) {
+        systemListeners.add(event -> {
+            if (event.type() == type) {
+                handler.accept(event);
+            }
+        });
+    }
+
     public void emit(EventType type, String collection, Object data) {
         var event = new Event(type, collection, data);
+        for (var listener : systemListeners) {
+            try {
+                listener.accept(event);
+            } catch (Exception ignored) {
+            }
+        }
         for (var listener : listeners) {
             try {
                 listener.accept(event);

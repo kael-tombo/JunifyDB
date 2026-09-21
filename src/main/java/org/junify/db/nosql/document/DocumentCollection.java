@@ -362,7 +362,7 @@ public class DocumentCollection {
         if (doc.id() == null) {
             throw new IllegalArgumentException("Document must have an id to update");
         }
-        var oldDoc = findById(doc.id());
+        final var oldDoc = findById(doc.id());
         if (oldDoc == null) {
             throw new IllegalArgumentException("Document not found: " + doc.id());
         }

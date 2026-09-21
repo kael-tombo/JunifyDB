@@ -1,6 +1,6 @@
 # JunifyDB Demonstration Ecosystem
 
-This directory contains the production-grade demonstration applications showcasing **JunifyDB** embedded multi-model NoSQL database across the Java/JVM ecosystem.
+This directory contains the demonstration applications showcasing **JunifyDB** embedded multi-model NoSQL database across the Java/JVM ecosystem. Every demo is a standalone Maven project; see `RUNBOOK.md` for the exact run procedure (install core, install `demo-common`, then `mvn test` each demo).
 
 ---
 
@@ -9,11 +9,14 @@ This directory contains the production-grade demonstration applications showcasi
 ```
 demo/
 ├── demo-common/              # Shared E-Commerce domain model & fixtures (Records)
-├── spring-boot-demo/         # Spring Boot 3.2.0 + JunifyDB Auto-Configuration starter demo
+├── spring-boot-demo/         # Spring Boot 3.2.5 + JunifyDB Auto-Configuration starter demo
 ├── quarkus-demo/             # Quarkus 3.8.0 + JunifyDB CDI Extension demo
 ├── micronaut-demo/           # Micronaut 4.2.0 + JunifyDB DI Integration demo
 ├── vertx-demo/               # Eclipse Vert.x 4.5.4 Reactive non-blocking demo
 ├── end-to-end-validation/    # Multi-engine lifecycle and durability verification
+├── advanced-queries-demo/    # SQL dialect, aggregation pipelines, indexed queries
+├── batch-processing-demo/    # Atomic batch writes, rollback, throughput patterns
+├── load-and-stress-demo/     # Concurrency harness and indicative performance figures
 └── annotation-showcase-demo/ # Multi-standard annotations (JNoSQL, JPA, Hibernate) & SQL Engine
 ```
 

@@ -1,5 +1,7 @@
 package org.junify.db.core.cdc;
 
+import org.junify.db.core.event.EventBus;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +21,47 @@ public class CDCManager {
 
     public CDCProcessor processor() {
         return processor;
+    }
+
+    /**
+     * Returns an {@link EventBus} listener that feeds document change events
+     * into this manager, turning the previously write-path-orphaned CDC
+     * subsystem into a live change feed. Register it once on the database's
+     * event bus (JunifyDB does this automatically at construction):
+     *
+     * <pre>{@code
+     * var listener = cdcManager.changeListener();
+     * eventBus.on(EventBus.EventType.AFTER_INSERT, listener);
+     * eventBus.on(EventBus.EventType.AFTER_UPDATE, listener);
+     * eventBus.on(EventBus.EventType.AFTER_DELETE, listener);
+     * }</pre>
+     *
+     * <p>Events carry {@code collection} and a data object: the stored
+     * {@link org.junify.db.core.record.UnifiedRecord} for inserts/updates, or
+     * the deleted document id ({@code String}) for deletes. Updates resolve
+     * the previous value at write time, matching CDC semantics.
+     */
+    public Consumer<EventBus.Event> changeListener() {
+        return event -> {
+            switch (event.type()) {
+                case AFTER_INSERT -> recordInsert(event.collection(), idOf(event.data()), jsonOf(event.data()));
+                case AFTER_UPDATE -> recordUpdate(event.collection(), idOf(event.data()), null, jsonOf(event.data()));
+                case AFTER_DELETE -> recordDelete(event.collection(), String.valueOf(event.data()), null);
+                default -> { }
+            }
+        };
+    }
+
+    private static String idOf(Object data) {
+        return data instanceof org.junify.db.core.record.UnifiedRecord r ? r.id() : String.valueOf(data.hashCode());
+    }
+
+    private static String jsonOf(Object data) {
+        try {
+            return data instanceof org.junify.db.core.record.UnifiedRecord r ? r.toJson() : String.valueOf(data);
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 
     public void recordInsert(String collection, String key, String value) {

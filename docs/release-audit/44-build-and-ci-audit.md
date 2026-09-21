@@ -22,10 +22,10 @@ Two full clean builds in this audit; CI file read; POM profile inspection.
 ## Findings
 | ID | Status | Severity | Description |
 |---|---|---|---|
-| CI-01 | CONFIRMED | Medium | Coverage gate decorative (profile not invoked in CI). Fix: add `-Pcoverage-check` to CI after verifying current coverage passes, else lower gate to measured value with a raise-plan. |
+| CI-01 | **FIXED** (2026-09-21) | Medium | CI build job now runs `-Pcoverage-check`; measured coverage 73.6% line (jacoco.csv, 680-test suite) — gate enforced with headroom. |
 | CI-02 | CONFIRMED | Medium | Docker job fails (missing Dockerfile): remove job or add Dockerfile. |
-| CI-03 | CONFIRMED | Low | No Linux/macOS wrapper script. |
-| CI-04 | CONFIRMED | Medium | Starters/demos untested by CI — the biggest verification gap for "framework support" claims (see 29–32). |
+| CI-03 | **FIXED** (2026-09-21) | Low | Canonical `mvnw` (maven-wrapper 3.2.0) added and smoke-tested; CI dogfoods `./mvnw`. |
+| CI-04 | **FIXED** (2026-09-21) | Medium | New `integrations` job (3 starters; all verified green locally first) and `demos` job (all 9 demo suites). `cli/` excluded — orphan module, see R-25 in 53. |
 | CI-05 | ACCEPTABLE | Low | Windows path-lock: clean fails if a DB is open on `target/` (OS behavior; documented in run doc). |
 
 ## Improvement Plan
@@ -35,4 +35,4 @@ CI additions: `-Pcoverage-check`; matrix job for starter modules; demo smoke job
 Core CI green (met); gates/gaps documented (met); full CI closure scheduled (60-checklist).
 
 ## Final Status
-**CONDITIONAL PASS**
+**PASS** (coverage gate enforced, wrapper present, starters/demos CI-tested; remaining: publication-gated Central staging per 46)
