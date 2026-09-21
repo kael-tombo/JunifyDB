@@ -2,9 +2,11 @@
 
 ## Decision
 
-**CONDITIONAL GO → GO-READY** (2026-09-21 update: all blockers closed with live
-evidence; only the in-flight deps-scan confirmation and the tag mechanics remain —
-see Critical Blockers and Required Pre-Release Fixes below)
+**GO** (2026-09-21, final update: run #34 completed **success** — build+coverage gate,
+size gate, starters/CLI, demos 9/9 on a fresh runner, benchmark, and the deps-scan
+OWASP window all green in a single run for the first time; every audit-identified
+blocker closed with live evidence. Remaining work is release mechanics: tag `v1.0.0`
+and publish the GitHub Release)
 
 ## Recommended Version
 
@@ -122,8 +124,8 @@ primary buttons `rgb(180,83,9)` / `rgb(252,211,77)`; `/logo.svg` and
 
 ## Required Pre-Release Fixes
 
-1. Confirm the `deps-scan` (OWASP) verdict on run #33's first cold-cache window (run #30 passed with a strictly larger dependency set — byte-buddy was excluded since; no new dependencies were added). This is a formality, not a risk.
-2. Tag `v1.0.0`, GitHub Release with the jar + audit-docs link (mechanics).
+1. ~~Confirm the `deps-scan` (OWASP) verdict~~ — **confirmed 2026-09-21**: run #34 (`0244df6`) completed **success** with a full cold-cache NVD window; no Critical findings.
+2. Tag `v1.0.0`, GitHub Release with the jar + audit-docs link (mechanics — the only remaining step).
 3. (Owner, when convenient) flip the Pages source from the `gh-pages` branch to GitHub Actions so future site updates deploy from `main:docs/`; until then, updates go through the documented gh-pages publish procedure (53).
 
 ## Safe Post-Release Improvements
@@ -154,10 +156,10 @@ primary buttons `rgb(180,83,9)` / `rgb(252,211,77)`; `/logo.svg` and
 - [x] Framework integrations honestly documented (docs 26–34, 57)
 - [x] Demos work from clean checkout (doc 35: 43/43; and CI-verified on a fresh GitHub runner, run #33 after R-27 fix)
 - [x] Maven Central readiness: metadata complete, dry-run validated (doc 46; live staging needs credentials)
-- [x] Complete regression suite passes (689 + coverage + size gates; CI jobs green on current HEAD incl. demos — run #33; deps-scan last full verdict pass on run #30, re-verified each push)
+- [x] Complete regression suite passes (689 + coverage + size gates; **run #34 all jobs green in one run**: build(21)+size gate, build(23), integrations, demos 9/9, benchmark, deps-scan)
 
-**CONDITIONAL GO → GO-READY** — every audit-identified blocker is now closed with
-live evidence. Remaining before tagging: confirm the in-flight deps-scan run
-(formality) and cut the tag. The only owner-side convenience item left is moving
-the Pages source from the gh-pages branch to Actions so future site edits publish
-automatically from `main:docs/`.
+**GO** — every audit-identified blocker is closed with live evidence and every CI
+job is green in a single run (#34). The remaining work is purely mechanical: cut
+the `v1.0.0` tag and publish the GitHub Release. The only owner-side convenience
+item left is moving the Pages source from the gh-pages branch to Actions so future
+site edits publish automatically from `main:docs/`.
