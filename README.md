@@ -2,8 +2,6 @@
 
 <img src="docs/assets/junifydb-banner.png" alt="JunifyDB — the embedded dual-engine database for Java" width="640" />
 
-# JunifyDB
-
 **The embedded dual-engine database for Java.**  
 NoSQL + a built-in SQL engine — one JAR, zero infrastructure, no Docker, no daemon.
 
