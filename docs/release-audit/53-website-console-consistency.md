@@ -20,6 +20,16 @@ embedded Console, across branding, tokens, states, and **truth of claims**.
 | 53-WC-09 | Terminology | Site "Redis structures" vs docs "KV list/set/hash" | PASS (acceptable synonym) | Low | none |
 | 53-WC-10 | States | Console empty/error/loading states verified in browser (docs 37/38); site is static marketing | PASS | Low | none |
 
+## Deployment diagnostics (2026-09-21, post-fix verification)
+
+- Live URL fetch after the corrected source landed on main: **old claims still served** (`ANSI SQL` ×10, `15ms` ×5, `org.junify:` ×1, `tamper-evident` ×1) — cache-busting confirms it is not CDN staleness.
+- `Last-Modified: Sat, 19 Sep 2026 21:47:08 GMT` + nginx-style `ETag "6aaf02dc-15cf4"`: the site is **frozen at the last successful deployment (Sep 19)** — every `Deploy GitHub Pages` run since #4 has failed at the `deploy` job with **no failed steps** (build job green).
+- Fix applied in-repo (`810bbec`): `configure-pages` with `enablement: true` — deploy still failed, so the residual cause is repository-level (Pages source/model or workflow-deployment permission), which requires owner access to Settings → Pages / Actions permissions.
+
+**Owner resolution paths (either one):**
+1. Settings → Pages → Source: **"Deploy from a branch"** → `main` + `/docs` (simplest; the corrected `docs/index.html` publishes on next push; then remove the `deploy` job from `pages.yml` to avoid model conflict).
+2. Keep the Actions model: Settings → Actions → General → Workflow permissions → **Read and write**; re-run the `Deploy GitHub Pages` workflow (it now auto-enables via `enablement: true`).
+
 ## Deployment caveat (honest scope)
 Fixes 53-WC-04..07 are applied to the **site source in this repo**
 (`docs/index.html`) and will reach the live URL only when GitHub Pages
