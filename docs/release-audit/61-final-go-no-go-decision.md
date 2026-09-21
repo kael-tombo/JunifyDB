@@ -10,12 +10,15 @@ The evidence-based release decision for JunifyDB 1.0.0, applying the release-blo
 4. **The console was validated end-to-end** against the real backend across all 13 panels (58 matrix) with zero browser errors, and the security posture (loopback default, opt-in key auth, loud warnings, header set) was source-and-test verified (22).
 5. **Known gaps are documented, not hidden**: starters lack CI (44), Central publication lacks plugins+staging proof (46), CDC has no producer (23), screenshots unavailable in this environment (38) — each carries a disposition and a scheduled fix.
 
-## Why CONDITIONAL GO (not GO)
-The mandate's own standard requires demos re-run on the final build and CI coherent before "GO without asterisks". Three mechanical P0 items remain (60): re-run all demos post-fix, amend CHANGELOG, remove/fix the failing Docker CI job. None carries implementation risk; all are verifiable in an afternoon.
+## Why GO
+The three P0 conditions from the audit (60-checklist) are now closed with evidence:
+1. **All 9 demos re-executed on the fixed build** — 43/43 demo tests green, 0 failures/errors/skipped, including real framework boots (Spring Boot 3.2.5 context, Quarkus 3.8.0 started in 4.38s) and the live stress harness (50 threads, 18,382 ops/sec, 0 failures). Per-demo table and evidence: `35-demo-project-audit.md`.
+2. **CHANGELOG amended** with the audit fixes (commit `ed6da57`).
+3. **CI Docker job removed** (no Dockerfile exists) and the benchmark job's wrong mainClass fixed (commit `ed6da57`).
 
 ## Decision
 
-**CONDITIONAL GO**
+**GO**
 
 ## Release Version
 **1.0.0** (GitHub-first). Keep `1.0.0` with a CHANGELOG "Fixed" amendment for the audit fixes; Maven Central publication follows after 46's requirements (P2-1).
@@ -33,10 +36,10 @@ The mandate's own standard requires demos re-run on the final build and CI coher
 ## Critical Blockers
 **None open.** (All four critical findings R-01..R-03 + R-04/R-05/R-06 fixed with evidence.)
 
-## Required Pre-Release Fixes (P0, mechanical)
-1. Re-run all demos on the final build and record output (60-P0-2).
-2. Amend CHANGELOG with the audit fixes (60-P0-3).
-3. Remove or supply the missing CI `Dockerfile` job (60-P0-4).
+## Required Pre-Release Fixes (P0, mechanical) — ALL COMPLETE
+1. ~~Re-run all demos on the final build and record output~~ ✅ 2026-09-21: 43/43 green (35).
+2. ~~Amend CHANGELOG with the audit fixes~~ ✅ commit `ed6da57`.
+3. ~~Remove or supply the missing CI `Dockerfile` job~~ ✅ commit `ed6da57` (also fixed benchmark mainClass).
 
 ## Safe Post-Release Improvements
 Coverage-gate enforcement, starter/demo CI matrix, `mvnw` script, REST API reference, Playwright UI suite, demo README prerequisites, ROADMAP refresh, Maven Central plugins+staging, CDC decision (wire-or-remove), typed exceptions, CVE scanning, index-hint planning, configurable HNSW dims, snapshot quarantine, crash-injection CI (59-P1/P2).
@@ -66,10 +69,10 @@ Coverage-gate enforcement, starter/demo CI matrix, `mvnw` script, REST API refer
 - [x] Critical defects fixed with pre/post evidence
 - [x] Claims audit complete; corrections live in README
 - [x] Console validated end-to-end; security posture verified
-- [ ] Demos re-run on final build (P0-2)
-- [ ] CHANGELOG amendment (P0-3)
-- [ ] CI Docker job removed/fixed (P0-4)
+- [x] Demos re-run on final build — 43/43 green (P0-2, 2026-09-21)
+- [x] CHANGELOG amendment (P0-3, commit `ed6da57`)
+- [x] CI Docker job removed/fixed (P0-4, commit `ed6da57`)
 - [ ] Tag `v1.0.0`, GitHub Release with shaded jar + audit docs link
 - [ ] (Post-release) Maven Central path per 46
 
-**GO is achievable immediately after the three P0 checkboxes close.**
+**All P0 gates cleared. The release is GO — remaining items are release mechanics (tag + GitHub Release) and post-release improvements.**

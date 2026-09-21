@@ -27,7 +27,7 @@ All defects identified in this audit with status, severity, fix evidence, and di
 | R-19 | Vectors | HNSW dimension hardcoded 128 | Medium | OPEN (documented, UI-labeled) | 12-IX-02 |
 | R-20 | Transactions | Engine apply phase non-atomic on engine failure; mixed tx/non-tx writers last-write-wins | Medium | OPEN (documented) | 13-T-02/03 |
 | R-21 | FileEngine | Single corrupted snapshot file blocks startup (no quarantine) | Medium | OPEN (documented) | 18-F-02 |
-| R-22 | Demos | Prerequisite (`mvn install` core) undocumented; not all demos re-executed here | Medium | OPEN | 35-DM-01/02 |
+| R-22 | Demos | Prerequisite (`mvn install` core) undocumented; not all demos re-executed here | Medium | **CLOSED** (2026-09-21) | All 9 demos re-run on fixed build: 43/43 tests green (35-DM-02); prerequisite documentation remains P1 |
 | R-23 | Docs | ROADMAP predates shipped SQL engine | Low | OPEN | 39-WS-02 |
 | R-24 | Audit trail | In-memory only, not persisted | Low | OPEN (documented) | 22-SEC-03 |
 
